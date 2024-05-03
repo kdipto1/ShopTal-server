@@ -12,11 +12,6 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "prepare": "husky"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pnpm lint"
-    }
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
