@@ -13,28 +13,106 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
+model User {
+  id         String @id @default(uuid())
+  first_name String
+  last_name  String
+  phone      String @unique
+  email      String @unique
+  password   String
+  address    String
+  role       Role   @default(user)
+  status     Status @default(active)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+
+  cart Cart?
+
+  @@map("users")
 }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
+model Product {
+  id         String @id @default(uuid())
+  name       String
+  price      Float
+  quantity   Int
+  brand_name String
+  image      String
+  features   Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categoryId    String
+  category      Product_Category    @relation(fields: [categoryId], references: [id])
+  subcategoryId String
+  subcategory   Product_Subcategory @relation(fields: [subcategoryId], references: [id])
+  cart_items    Cart_Item[]
+
+  @@map("products")
 }
 
-model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
+model Product_Category {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  Product_Subcategory Product_Subcategory[]
+  products            Product[]
+
+  @@map("categories")
+}
+
+model Product_Subcategory {
+  id   String @id @default(uuid())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categoryId String
+  category   Product_Category @relation(fields: [categoryId], references: [id])
+  products   Product[]
+
+  @@map("subcategories")
+}
+
+model Cart {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart_items Cart_Item[]
+
+  @@map("carts")
+}
+
+model Cart_Item {
+  id        String  @id @default(uuid())
+  quantity  Int
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cart_items")
+}
+
+enum Role {
+  user
+  admin
+}
+
+enum Status {
+  active
+  inactive
+  disabled
 }
