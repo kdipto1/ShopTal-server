@@ -1,2 +1,20 @@
+export const UserSearchAbleFields = [
+  "email",
+  "firstName",
+  "middleName",
+  "lastName",
+  // 'contactNo',
+  "role",
+  "address",
+];
 
-// Define your constants here
+export const UserFilterAbleFields = [
+  "searchTerm",
+  "email",
+  "firstName",
+  "middleName",
+  "lastName",
+  "contactNo",
+  "role",
+  "address",
+];

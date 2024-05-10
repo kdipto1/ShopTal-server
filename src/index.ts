@@ -1,15 +1,37 @@
-import express from "express";
-import dotenv from "dotenv";
+import { Server } from "http";
+import app from "./app";
+import config from "./config";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 
-dotenv.config();
+async function bootstrap() {
+  const server: Server = app.listen(config.port, () => {
+    app.use(globalErrorHandler);
+    console.info(`Server running on port ${config.port}`);
+  });
 
-const app = express();
-const port = process.env.PORT;
+  const exitHandler = () => {
+    if (server) {
+      server.close(() => {
+        console.info("Server closed");
+      });
+    }
+    process.exit(1);
+  };
 
-app.get("/", (req, res) => {
-  res.send("Hello ShopTal Server");
-});
+  const unexpectedErrorHandler = (err: unknown) => {
+    console.error(err);
+    exitHandler();
+  };
 
-app.listen(port, () => {
-  console.log(`Server starter on port : http://localhost:${port}/`);
-});
+  process.on("uncaughtException", unexpectedErrorHandler);
+  process.on("unhandledRejection", unexpectedErrorHandler);
+
+  process.on("SIGTERM", () => {
+    console.info("SIGTERM received");
+    if (server) {
+      server.close();
+    }
+  });
+}
+
+bootstrap();
