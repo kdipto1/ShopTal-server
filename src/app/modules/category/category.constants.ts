@@ -1,2 +1,3 @@
+export const CategorySearchAbleFields = ["name"];
 
-// Define your constants here
+export const CategoryFilterAbleFields = ["searchTerm", "name"];

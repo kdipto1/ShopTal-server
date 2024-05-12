@@ -1,2 +1,4 @@
-
-// Define your interfaces here
+export type ISubcategoryFilterRequest = {
+  searchTerm?: string;
+  name?: string;
+};
