@@ -24,7 +24,7 @@ const auth =
           "Token verification failed",
         );
       }
-      req.user = verifiedUser; // JwtPayload
+      (req as any).user = verifiedUser; // JwtPayload
 
       if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
         throw new ApiError(httpStatus.FORBIDDEN, "Forbidden");
