@@ -1,2 +1,3 @@
+export const ProductSearchAbleFields = ["name"];
 
-// Define your constants here
+export const ProductFilterAbleFields = ["searchTerm", "name"];
