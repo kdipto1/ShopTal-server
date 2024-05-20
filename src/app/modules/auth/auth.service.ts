@@ -35,14 +35,14 @@ const signup = async (payload: Prisma.UserCreateInput) => {
     payload.password = hashedPassword;
   }
   payload.role = "user";
+  payload.status = "active";
   const result = await prisma.user.create({
     data: payload,
     select: {
       id: true,
+      firstName: true,
+      lastName: true,
       email: true,
-      first_name: true,
-      last_name: true,
-
       phone: true,
       status: true,
       address: true,

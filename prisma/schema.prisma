@@ -14,15 +14,15 @@ datasource db {
 }
 
 model User {
-  id         String @id @default(uuid())
-  first_name String
-  last_name  String
-  phone      String @unique
-  email      String @unique
-  password   String
-  address    String
-  role       Role   @default(user)
-  status     Status @default(active)
+  id        String @id @default(uuid())
+  firstName String
+  lastName  String
+  phone     String @unique
+  email     String @unique
+  password  String
+  address   String
+  role      Role   @default(user)
+  status    Status @default(active)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,39 +33,39 @@ model User {
 }
 
 model Product {
-  id         String @id @default(uuid())
-  name       String
-  price      Float
-  quantity   Int
-  brand_name String
-  image      String
-  features   Json
+  id        String @id @default(uuid())
+  name      String
+  price     Float
+  quantity  Int
+  brandName String
+  image     String
+  features  Json
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   categoryId    String
-  category      Product_Category    @relation(fields: [categoryId], references: [id])
+  category      ProductCategory    @relation(fields: [categoryId], references: [id])
   subcategoryId String
-  subcategory   Product_Subcategory @relation(fields: [subcategoryId], references: [id])
-  cart_items    Cart_Item[]
+  subcategory   ProductSubcategory @relation(fields: [subcategoryId], references: [id])
+  cartItems     CartItem[]
 
   @@map("products")
 }
 
-model Product_Category {
+model ProductCategory {
   id   String @id @default(uuid())
   name String
 
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  Product_Subcategory Product_Subcategory[]
-  products            Product[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  productSubcategory ProductSubcategory[]
+  products           Product[]
 
   @@map("categories")
 }
 
-model Product_Subcategory {
+model ProductSubcategory {
   id   String @id @default(uuid())
   name String
 
@@ -73,7 +73,7 @@ model Product_Subcategory {
   updatedAt DateTime @updatedAt
 
   categoryId String
-  category   Product_Category @relation(fields: [categoryId], references: [id])
+  category   ProductCategory @relation(fields: [categoryId], references: [id])
   products   Product[]
 
   @@map("subcategories")
@@ -87,12 +87,12 @@ model Cart {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  cart_items Cart_Item[]
+  cartItems CartItem[]
 
   @@map("carts")
 }
 
-model Cart_Item {
+model CartItem {
   id        String  @id @default(uuid())
   quantity  Int
   cartId    String

@@ -1,4 +1,4 @@
-import { Prisma, Product_Subcategory } from "@prisma/client";
+import { Prisma, ProductSubcategory } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
@@ -7,8 +7,8 @@ import { IPaginationOptions } from "../../../interfaces/pagination";
 import { ISubcategoryFilterRequest } from "./subcategory.interfaces";
 import { SubcategorySearchAbleFields } from "./subcategory.constants";
 
-const create = async (payload: Prisma.Product_SubcategoryCreateInput) => {
-  const result = await prisma.product_Subcategory.create({
+const create = async (payload: Prisma.ProductSubcategoryCreateInput) => {
+  const result = await prisma.productSubcategory.create({
     data: payload,
   });
   return result;
@@ -17,7 +17,7 @@ const create = async (payload: Prisma.Product_SubcategoryCreateInput) => {
 const getAllOrFilter = async (
   filters: ISubcategoryFilterRequest,
   options: IPaginationOptions,
-): Promise<IGenericResponse<Product_Subcategory[]>> => {
+): Promise<IGenericResponse<ProductSubcategory[]>> => {
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filtersData } = filters;
 
@@ -48,10 +48,10 @@ const getAllOrFilter = async (
     });
   }
 
-  const whereConditions: Prisma.Product_SubcategoryWhereInput =
+  const whereConditions: Prisma.ProductSubcategoryWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  const result = await prisma.product_Subcategory.findMany({
+  const result = await prisma.productSubcategory.findMany({
     where: whereConditions,
     skip,
     take: limit,
@@ -63,7 +63,7 @@ const getAllOrFilter = async (
         : { createdAt: "desc" },
   });
 
-  const total = await prisma.product_Subcategory.count({
+  const total = await prisma.productSubcategory.count({
     where: whereConditions,
   });
 
@@ -78,7 +78,7 @@ const getAllOrFilter = async (
 };
 
 const getById = async (id: string) => {
-  const result = await prisma.product_Subcategory.findUnique({
+  const result = await prisma.productSubcategory.findUnique({
     where: {
       id,
     },
@@ -88,9 +88,9 @@ const getById = async (id: string) => {
 
 const updateById = async (
   id: string,
-  payload: Prisma.Product_SubcategoryUpdateInput,
+  payload: Prisma.ProductSubcategoryUpdateInput,
 ) => {
-  const result = await prisma.product_Subcategory.update({
+  const result = await prisma.productSubcategory.update({
     where: {
       id,
     },
@@ -100,7 +100,7 @@ const updateById = async (
 };
 
 const deleteById = async (id: string) => {
-  const result = await prisma.product_Subcategory.delete({
+  const result = await prisma.productSubcategory.delete({
     where: {
       id,
     },

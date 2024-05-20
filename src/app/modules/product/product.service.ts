@@ -1,4 +1,4 @@
-import { Prisma, Product_Category } from "@prisma/client";
+import { Prisma, ProductCategory } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
@@ -7,7 +7,7 @@ import { IProductFilterRequest } from "./product.interfaces";
 import { ProductSearchAbleFields } from "./product.constants";
 
 const create = async (payload: Prisma.ProductCreateInput) => {
-  const result = await prisma.product_Category.create({
+  const result = await prisma.productCategory.create({
     data: payload,
   });
   return result;
@@ -16,7 +16,7 @@ const create = async (payload: Prisma.ProductCreateInput) => {
 const getAllOrFilter = async (
   filters: IProductFilterRequest,
   options: IPaginationOptions,
-): Promise<IGenericResponse<Product_Category[]>> => {
+): Promise<IGenericResponse<ProductCategory[]>> => {
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filtersData } = filters;
 
@@ -47,10 +47,10 @@ const getAllOrFilter = async (
     });
   }
 
-  const whereConditions: Prisma.Product_CategoryWhereInput =
+  const whereConditions: Prisma.ProductCategoryWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
 
-  const result = await prisma.product_Category.findMany({
+  const result = await prisma.productCategory.findMany({
     where: whereConditions,
     skip,
     take: limit,
@@ -62,7 +62,7 @@ const getAllOrFilter = async (
         : { createdAt: "desc" },
   });
 
-  const total = await prisma.product_Category.count({ where: whereConditions });
+  const total = await prisma.productCategory.count({ where: whereConditions });
 
   return {
     meta: {
@@ -75,7 +75,7 @@ const getAllOrFilter = async (
 };
 
 const getById = async (id: string) => {
-  const result = await prisma.product_Category.findUnique({
+  const result = await prisma.productCategory.findUnique({
     where: {
       id,
     },
@@ -85,9 +85,9 @@ const getById = async (id: string) => {
 
 const updateById = async (
   id: string,
-  payload: Prisma.Product_CategoryUpdateInput,
+  payload: Prisma.ProductCategoryUpdateInput,
 ) => {
-  const result = await prisma.product_Category.update({
+  const result = await prisma.productCategory.update({
     where: {
       id,
     },
@@ -97,7 +97,7 @@ const updateById = async (
 };
 
 const deleteById = async (id: string) => {
-  const result = await prisma.product_Category.delete({
+  const result = await prisma.productCategory.delete({
     where: {
       id,
     },

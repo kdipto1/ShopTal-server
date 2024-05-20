@@ -59,8 +59,8 @@ const getAllOrFilter = async (
     select: {
       id: true,
       email: true,
-      first_name: true,
-      last_name: true,
+      firstName: true,
+      lastName: true,
       phone: true,
       address: true,
       role: true,
@@ -105,7 +105,7 @@ const getUserProfile = async (userId: string) => {
     select: {
       id: true,
       email: true,
-      first_name: true,
+      firstName: true,
       address: true,
     },
   });

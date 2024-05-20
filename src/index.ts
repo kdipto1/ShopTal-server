@@ -6,7 +6,7 @@ import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 async function bootstrap() {
   const server: Server = app.listen(config.port, () => {
     app.use(globalErrorHandler);
-    console.info(`Server running on port ${config.port}`);
+    console.info(`Server running on port http://localhost:${config.port}/`);
   });
 
   const exitHandler = () => {
