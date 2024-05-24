@@ -7,10 +7,11 @@ import { IProductFilterRequest } from "./product.interfaces";
 import { ProductSearchAbleFields } from "./product.constants";
 
 const create = async (payload: Prisma.ProductCreateInput) => {
-  const result = await prisma.productCategory.create({
-    data: payload,
-  });
-  return result;
+  console.log(payload);
+  // const result = await prisma.productCategory.create({
+  //   data: payload,
+  // });
+  // return result;
 };
 
 const getAllOrFilter = async (
