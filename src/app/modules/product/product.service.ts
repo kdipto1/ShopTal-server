@@ -6,12 +6,11 @@ import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IProductFilterRequest } from "./product.interfaces";
 import { ProductSearchAbleFields } from "./product.constants";
 
-const create = async (payload: Prisma.ProductCreateInput) => {
-  console.log(payload);
-  // const result = await prisma.productCategory.create({
-  //   data: payload,
-  // });
-  // return result;
+const create = async (payload: any) => {
+  const result = await prisma.productCategory.create({
+    data: payload,
+  });
+  return result;
 };
 
 const getAllOrFilter = async (

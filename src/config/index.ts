@@ -14,4 +14,9 @@ export default {
     refresh_secret: process.env.JWT_REFRESH_SECRET,
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
   },
+  cloudier: {
+    name: process.env.CLOUDINARY_cloud_name,
+    key: process.env.CLOUDINARY_api_key,
+    secret: process.env.CLOUDINARY_api_secret,
+  },
 };

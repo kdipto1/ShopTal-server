@@ -9,8 +9,8 @@ app.use(cors());
 app.use(cookieParser());
 
 //parser
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 import routes from "./app/routes";
 app.use("/api/v1", routes);
