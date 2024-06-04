@@ -48,6 +48,11 @@ const signup = async (payload: Prisma.UserCreateInput) => {
       address: true,
     },
   });
+  await prisma.cart.create({
+    data: {
+      userId: result.id,
+    },
+  });
   return result;
 };
 

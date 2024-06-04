@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import {  Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
@@ -32,7 +32,6 @@ const create = catchAsync(async (req: Request, res: Response) => {
       });
     }
     const uploadedFile = file[0];
-
     let name, price, quantity, brandName, features, categoryId, subcategoryId;
     if (
       fields?.name &&
