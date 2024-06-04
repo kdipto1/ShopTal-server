@@ -2,4 +2,4 @@
 
 ## ShopTal ERD Diagram:
 
-![ShopTal ERD Diagram](https://i.ibb.co/MgftMVR/Shop-Tal-Diagram-drawio.png)
+![ShopTal ERD Diagram](https://i.ibb.co/km87qXW/Shop-Tal-Diagram-drawio.png)
