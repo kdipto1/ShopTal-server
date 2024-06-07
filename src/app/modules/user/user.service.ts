@@ -124,6 +124,11 @@ const updateById = async (id: string, payload: Partial<User>) => {
 };
 
 const deleteById = async (id: string) => {
+  await prisma.cart.delete({
+    where: {
+      userId: id,
+    },
+  });
   const result = await prisma.user.delete({
     where: {
       id,

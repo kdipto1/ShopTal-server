@@ -8,6 +8,8 @@ import {
   ProductCreateInput,
 } from "./product.interfaces";
 import { ProductSearchAbleFields } from "./product.constants";
+import cloudinary from "../../../config/cloudinaryConfig";
+import ApiError from "../../../errors/ApiError";
 
 const create = async (payload: ProductCreateInput) => {
   const result = await prisma.product.create({
@@ -100,6 +102,21 @@ const updateById = async (
 };
 
 const deleteById = async (id: string) => {
+  const product = await prisma.product.findFirstOrThrow({
+    where: {
+      id,
+    },
+  });
+  const imageUrl: any = product.image;
+  const publicId = imageUrl.split("/").pop().split(".")[0];
+  try {
+    const image = await cloudinary.uploader.destroy(`shoptal/${publicId}`);
+    if (image.result !== "ok") {
+      throw new ApiError(500, "Failed to delete product image");
+    }
+  } catch (error) {
+    throw new ApiError(500, "Failed to delete product image");
+  }
   const result = await prisma.product.delete({
     where: {
       id,
