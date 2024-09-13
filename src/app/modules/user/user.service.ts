@@ -14,7 +14,7 @@ const getAllOrFilter = async (
   options: IPaginationOptions,
 ): Promise<IGenericResponse<Partial<User>[]>> => {
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
-  const { searchTerm, phone, ...filtersData } = filters;
+  const { searchTerm, ...filtersData } = filters;
 
   const andConditions = [];
 
@@ -124,6 +124,12 @@ const updateById = async (id: string, payload: Partial<User>) => {
 };
 
 const deleteById = async (id: string) => {
+  const user = prisma.user.findFirstOrThrow({
+    where: { id },
+  });
+  if ((await user).role === "admin") {
+    throw new ApiError(httpStatus.NOT_MODIFIED, "Admin can't be deleted");
+  }
   await prisma.cart.delete({
     where: {
       userId: id,
