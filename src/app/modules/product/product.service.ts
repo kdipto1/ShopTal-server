@@ -107,6 +107,7 @@ const deleteById = async (id: string) => {
       id,
     },
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const imageUrl: any = product.image;
   const publicId = imageUrl.split("/").pop().split(".")[0];
   try {
@@ -114,6 +115,7 @@ const deleteById = async (id: string) => {
     if (image.result !== "ok") {
       throw new ApiError(500, "Failed to delete product image");
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     throw new ApiError(500, "Failed to delete product image");
   }

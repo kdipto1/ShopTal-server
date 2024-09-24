@@ -1,4 +1,4 @@
-import {  Request, Response } from "express";
+import { Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
@@ -67,6 +67,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
 
     try {
       const uploadResult = await cloudinary.uploader.upload(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (uploadedFile as any).filepath,
         {
           folder: "shoptal",
@@ -119,6 +120,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
           message: "Error creating product",
         });
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       sendResponse(res, {
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,

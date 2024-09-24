@@ -9,7 +9,7 @@ const auth =
   (...requiredRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = req.headers.authorization;
+      const token = req.headers["authorization"]?.replace("Bearer ", "");
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "You are not authorized");
       }
@@ -24,6 +24,7 @@ const auth =
           "Token verification failed",
         );
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (req as any).user = verifiedUser; // JwtPayload
 
       if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {

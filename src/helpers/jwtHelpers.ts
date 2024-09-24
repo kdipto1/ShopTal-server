@@ -12,8 +12,13 @@ const verifyToken = (
   token: string,
   secret: Secret,
 ): string | jwt.JwtPayload => {
-  const decoded = jwt.verify(token, secret);
-  return decoded;
+  try {
+    const decoded = jwt.verify(token, secret);
+    return decoded;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    throw new Error("Invalid Token");
+  }
 };
 
 export const JwtHelpers = {
