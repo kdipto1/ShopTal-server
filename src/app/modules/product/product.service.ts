@@ -28,11 +28,7 @@ const getAllOrFilter = async (
   const andConditions = [];
   if (searchTerm) {
     andConditions.push({
-      OR: ProductSearchAbleFields.filter(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        field => typeof filtersData[field] === "string",
-      ).map(field => ({
+      OR: ProductSearchAbleFields.map(field => ({
         [field]: {
           contains: searchTerm,
           mode: "insensitive",

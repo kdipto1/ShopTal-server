@@ -145,6 +145,7 @@ const getAllOrFilter = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ProductFilterAbleFields);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await ProductService.getAllOrFilter(filters, options);
+  // console.log(req);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
