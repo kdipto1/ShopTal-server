@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-export type ICategoryFilterRequest = {
+export type IBrandFilterRequest = {
   searchTerm?: string;
   name?: string;
 };

@@ -9,7 +9,7 @@ export type ProductCreateInput = {
   name: string;
   price: number;
   quantity: number;
-  brandName: string;
+  brandId: string;
   image: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   features: any;

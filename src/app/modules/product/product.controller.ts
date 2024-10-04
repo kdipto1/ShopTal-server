@@ -32,13 +32,21 @@ const create = catchAsync(async (req: Request, res: Response) => {
       });
     }
     const uploadedFile = file[0];
-    let name, price, quantity, brandName, features, categoryId, subcategoryId;
+    let name,
+      price,
+      quantity,
+      brandName,
+      features,
+      brandId,
+      categoryId,
+      subcategoryId;
     if (
       fields?.name &&
       fields?.price &&
       fields?.quantity &&
       fields?.brandName &&
       fields?.features &&
+      fields?.brandId &&
       fields?.categoryId &&
       fields?.subcategoryId
     ) {
@@ -47,6 +55,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
       quantity = Number(fields.quantity[0]);
       brandName = fields.brandName[0];
       features = JSON.parse(fields.features[0]);
+      brandId = fields.brandId[0];
       categoryId = fields.categoryId[0];
       subcategoryId = fields.subcategoryId[0];
     }
@@ -55,6 +64,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
       !price ||
       !quantity ||
       !brandName ||
+      !brandId ||
       !categoryId ||
       !subcategoryId
     ) {
@@ -76,6 +86,13 @@ const create = catchAsync(async (req: Request, res: Response) => {
       const imageUrl = uploadResult.url;
 
       try {
+        const brand = await prisma.brand.findFirst({
+          where: { id: brandId },
+        });
+
+        if (!brand) {
+          throw new ApiError(httpStatus.NOT_FOUND, "Brand not found");
+        }
         const category = await prisma.productCategory.findFirst({
           where: { id: categoryId },
         });
@@ -96,7 +113,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
           name,
           price,
           quantity,
-          brandName,
+          brandId,
           image: imageUrl,
           features,
           categoryId,
