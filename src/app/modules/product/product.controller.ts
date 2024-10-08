@@ -32,19 +32,11 @@ const create = catchAsync(async (req: Request, res: Response) => {
       });
     }
     const uploadedFile = file[0];
-    let name,
-      price,
-      quantity,
-      brandName,
-      features,
-      brandId,
-      categoryId,
-      subcategoryId;
+    let name, price, quantity, features, brandId, categoryId, subcategoryId;
     if (
       fields?.name &&
       fields?.price &&
       fields?.quantity &&
-      fields?.brandName &&
       fields?.features &&
       fields?.brandId &&
       fields?.categoryId &&
@@ -53,7 +45,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
       name = fields.name[0];
       price = Number(fields.price[0]);
       quantity = Number(fields.quantity[0]);
-      brandName = fields.brandName[0];
+
       features = JSON.parse(fields.features[0]);
       brandId = fields.brandId[0];
       categoryId = fields.categoryId[0];
@@ -63,7 +55,6 @@ const create = catchAsync(async (req: Request, res: Response) => {
       !name ||
       !price ||
       !quantity ||
-      !brandName ||
       !brandId ||
       !categoryId ||
       !subcategoryId

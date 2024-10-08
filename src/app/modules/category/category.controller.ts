@@ -27,6 +27,15 @@ const getAllOrFilter = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getNavbarCategory = catchAsync(async (req: Request, res: Response) => {
+  const result = await CategoryService.getNavbarCategory();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Navbar Category's Retrieved Successfully!",
+    data: result,
+  });
+});
 
 const getById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -67,4 +76,5 @@ export const CategoryController = {
   getById,
   updateById,
   deleteById,
+  getNavbarCategory,
 };

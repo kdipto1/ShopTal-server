@@ -59,9 +59,11 @@ model Brand {
   id   String @id @default(uuid())
   name String @unique
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Product   Product[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  Product    Product[]
+  categoryId String?
+  category   ProductCategory? @relation(fields: [categoryId], references: [id])
 
   @@map("brands")
 }
@@ -74,6 +76,7 @@ model ProductCategory {
   updatedAt          DateTime             @updatedAt
   productSubcategory ProductSubcategory[]
   products           Product[]
+  Brand              Brand[]
 
   @@map("categories")
 }

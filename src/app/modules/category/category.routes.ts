@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post("/", auth(ENUM_USER_ROLE.ADMIN), CategoryController.create);
 router.get("/", CategoryController.getAllOrFilter);
+router.get("/navbar-category", CategoryController.getNavbarCategory);
 router.get("/:id", CategoryController.getById);
 router.patch("/:id", CategoryController.updateById);
 router.delete(

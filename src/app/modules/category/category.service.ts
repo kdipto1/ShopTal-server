@@ -70,6 +70,19 @@ const getAllOrFilter = async (
   };
 };
 
+const getNavbarCategory = async () => {
+  const result = await prisma.productCategory.findMany({
+    include: {
+      productSubcategory: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  // const total = await prisma.productCategory.count();
+
+  return result;
+};
+
 const getById = async (id: string) => {
   const result = await prisma.productCategory.findUnique({
     where: {
@@ -107,4 +120,5 @@ export const CategoryService = {
   getById,
   updateById,
   deleteById,
+  getNavbarCategory,
 };
