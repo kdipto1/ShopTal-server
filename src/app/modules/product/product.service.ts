@@ -80,6 +80,23 @@ const getById = async (id: string) => {
     where: {
       id,
     },
+    include: {
+      brand: {
+        select: {
+          name: true,
+        },
+      },
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      subcategory: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
   return result;
 };
