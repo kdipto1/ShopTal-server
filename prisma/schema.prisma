@@ -76,7 +76,7 @@ model ProductCategory {
   updatedAt          DateTime             @updatedAt
   productSubcategory ProductSubcategory[]
   products           Product[]
-  Brand              Brand[]
+  brands             Brand[]
 
   @@map("categories")
 }

@@ -32,7 +32,7 @@ const getNavbarCategory = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Navbar Category's Retrieved Successfully!",
+    message: "Navbar Categories Retrieved Successfully!",
     data: result,
   });
 });

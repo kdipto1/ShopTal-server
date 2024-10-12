@@ -74,12 +74,12 @@ const getNavbarCategory = async () => {
   const result = await prisma.productCategory.findMany({
     include: {
       productSubcategory: true,
+      brands: true,
     },
     orderBy: { createdAt: "desc" },
   });
 
   // const total = await prisma.productCategory.count();
-
   return result;
 };
 
