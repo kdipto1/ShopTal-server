@@ -23,7 +23,7 @@ const create = async (
       data: { userId },
     });
   }
-  // Check if item already exists in cart
+
   const existingCartItem = await prisma.cartItem.findFirst({
     where: {
       cartId: cart.id,
@@ -32,11 +32,10 @@ const create = async (
   });
 
   if (existingCartItem) {
-    // Update quantity if item exists
     const result = await prisma.cartItem.update({
       where: { id: existingCartItem.id },
       data: {
-        quantity: existingCartItem.quantity + 1,
+        quantity: existingCartItem.quantity + payload.quantity,
       },
     });
     return result;
