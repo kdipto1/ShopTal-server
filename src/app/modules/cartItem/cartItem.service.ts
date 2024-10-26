@@ -5,10 +5,49 @@ import { paginationHelpers } from "../../../helpers/paginationHelper";
 import { IPaginationOptions } from "../../../interfaces/pagination";
 import { CartItemSearchAbleFields } from "./cartItem.constants";
 import { ICartItemFilterRequest } from "./cartItem.interfaces";
+import { JwtPayload } from "jsonwebtoken";
 
-const create = async (payload: Prisma.CartItemCreateInput) => {
+const create = async (
+  payload: { productId: string; quantity: number },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user: JwtPayload | any,
+) => {
+  const { userId } = user;
+  let cart = await prisma.cart.findUnique({
+    where: {
+      userId: userId,
+    },
+  });
+  if (!cart) {
+    cart = await prisma.cart.create({
+      data: { userId },
+    });
+  }
+  // Check if item already exists in cart
+  const existingCartItem = await prisma.cartItem.findFirst({
+    where: {
+      cartId: cart.id,
+      productId: payload.productId,
+    },
+  });
+
+  if (existingCartItem) {
+    // Update quantity if item exists
+    const result = await prisma.cartItem.update({
+      where: { id: existingCartItem.id },
+      data: {
+        quantity: existingCartItem.quantity + 1,
+      },
+    });
+    return result;
+  }
+
   const result = await prisma.cartItem.create({
-    data: payload,
+    data: {
+      cartId: cart.id,
+      quantity: payload.quantity,
+      productId: payload.productId,
+    },
   });
   return result;
 };

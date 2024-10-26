@@ -5,9 +5,13 @@ import httpStatus from "http-status";
 import pick from "../../../shared/pick";
 import { CartItemService } from "./cartItem.service";
 import { CartItemFilterAbleFields } from "./cartItem.constants";
+import { JwtPayload } from "jsonwebtoken";
 
 const create = catchAsync(async (req: Request, res: Response) => {
-  const result = await CartItemService.create(req.body);
+  const user = (req as Request & { user?: JwtPayload }).user;
+
+  console.log(user);
+  const result = await CartItemService.create(req.body, user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

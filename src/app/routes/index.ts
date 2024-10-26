@@ -35,7 +35,7 @@ const moduleRoutes = [
     route: ProductRoutes,
   },
   {
-    path: "/carts",
+    path: "/cart-items",
     route: CartItemRoutes,
   },
 ];
