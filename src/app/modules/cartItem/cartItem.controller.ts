@@ -10,12 +10,23 @@ import { JwtPayload } from "jsonwebtoken";
 const create = catchAsync(async (req: Request, res: Response) => {
   const user = (req as Request & { user?: JwtPayload }).user;
 
-  console.log(user);
   const result = await CartItemService.create(req.body, user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Item added to cart Successfully!",
+    data: result,
+  });
+});
+
+const getUserCartItems = catchAsync(async (req: Request, res: Response) => {
+  const user = (req as Request & { user?: JwtPayload }).user;
+  const result = await CartItemService.getUserCartItems(user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Retrieved cart items successfully!",
     data: result,
   });
 });
@@ -71,4 +82,5 @@ export const CartItemController = {
   getById,
   updateById,
   deleteById,
+  getUserCartItems,
 };

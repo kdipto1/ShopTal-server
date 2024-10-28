@@ -51,6 +51,35 @@ const create = async (
   return result;
 };
 
+const getUserCartItems = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user: JwtPayload | any,
+) => {
+  const { userId } = user;
+  const cartId = await prisma.cart.findFirst({
+    where: {
+      userId,
+    },
+  });
+
+  const result = await prisma.cartItem.findMany({
+    where: {
+      cartId: cartId?.id,
+    },
+    include: {
+      product: {
+        select: {
+          id: true,
+          name: true,
+          price: true,
+          image: true,
+        },
+      },
+    },
+  });
+  return result;
+};
+
 const getAllOrFilter = async (
   filters: ICartItemFilterRequest,
   options: IPaginationOptions,
@@ -142,4 +171,5 @@ export const CartItemService = {
   getById,
   updateById,
   deleteById,
+  getUserCartItems,
 };

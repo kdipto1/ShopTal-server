@@ -15,6 +15,13 @@ router.get(
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   CartItemController.getAllOrFilter,
 );
+
+router.get(
+  "/user-items",
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  CartItemController.getUserCartItems,
+);
+
 router.get(
   "/:id",
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
