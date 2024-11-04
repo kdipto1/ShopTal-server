@@ -2,6 +2,11 @@
 export type IProductFilterRequest = {
   searchTerm?: string;
   name?: string;
+  categoryId?: string;
+  subcategoryId?: string;
+  brandId?: string;
+  minPrice?: number;
+  maxPrice?: number;
 };
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions

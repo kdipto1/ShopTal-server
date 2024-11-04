@@ -23,9 +23,9 @@ const getAllOrFilter = async (
   options: IPaginationOptions,
 ): Promise<IGenericResponse<ProductCategory[]>> => {
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
-  const { searchTerm, ...filtersData } = filters;
+  const { searchTerm, minPrice, maxPrice, ...filtersData } = filters;
 
-  const andConditions = [];
+  const andConditions: Prisma.ProductWhereInput[] = [];
   if (searchTerm) {
     andConditions.push({
       OR: ProductSearchAbleFields.map(field => ({
@@ -34,6 +34,21 @@ const getAllOrFilter = async (
           mode: "insensitive",
         },
       })),
+    });
+  }
+
+  if (minPrice) {
+    andConditions.push({
+      price: {
+        gte: Number(minPrice),
+      },
+    });
+  }
+  if (maxPrice) {
+    andConditions.push({
+      price: {
+        lte: Number(maxPrice),
+      },
     });
   }
 
