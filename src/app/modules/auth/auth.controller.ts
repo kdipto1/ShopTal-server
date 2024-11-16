@@ -23,6 +23,8 @@ const login = catchAsync(async (req: Request, res: Response) => {
     httpOnly: true,
   };
   res.cookie("refreshToken", refreshToken, cookieOptions);
+  // res.cookie("accessToken", result.accessToken, cookieOptions);
+  // res.cookie("userRole", result.role, cookieOptions);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

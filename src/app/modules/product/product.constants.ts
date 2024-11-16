@@ -13,4 +13,5 @@ export const ProductFilterAbleFields = [
   "brandId",
   "minPrice",
   "maxPrice",
+  "random",
 ];

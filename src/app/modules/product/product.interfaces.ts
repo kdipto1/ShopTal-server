@@ -7,6 +7,7 @@ export type IProductFilterRequest = {
   brandId?: string;
   minPrice?: number;
   maxPrice?: number;
+  random?: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions

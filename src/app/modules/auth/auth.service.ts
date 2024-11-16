@@ -96,7 +96,7 @@ const login = async (payload: {
     config.jwt.refresh_expires_in as string,
   );
 
-  return { accessToken, refreshToken };
+  return { accessToken, refreshToken, role };
 };
 
 export const AuthService = {

@@ -23,7 +23,7 @@ const getAllOrFilter = async (
   options: IPaginationOptions,
 ): Promise<IGenericResponse<ProductCategory[]>> => {
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
-  const { searchTerm, minPrice, maxPrice, ...filtersData } = filters;
+  const { searchTerm, minPrice, maxPrice, random, ...filtersData } = filters;
 
   const andConditions: Prisma.ProductWhereInput[] = [];
   if (searchTerm) {
@@ -65,6 +65,34 @@ const getAllOrFilter = async (
 
   const whereConditions: Prisma.ProductWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {};
+
+  // To get random products set search param : /product?random=true
+  if (random) {
+    // First, get total count of matching products
+    const total = await prisma.product.count({ where: whereConditions });
+
+    // Generate random skip value
+    const randomSkip = Math.floor(Math.random() * Math.max(0, total - limit));
+
+    const result = await prisma.product.findMany({
+      where: whereConditions,
+      skip: randomSkip,
+      take: limit,
+      orderBy: {
+        // Optional: add additional randomization with random ordering
+        id: "asc", // or any other field
+      },
+    });
+
+    return {
+      meta: {
+        page: 1,
+        limit,
+        total,
+      },
+      data: result,
+    };
+  }
 
   const result = await prisma.product.findMany({
     where: whereConditions,
