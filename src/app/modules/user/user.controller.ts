@@ -32,6 +32,7 @@ const getById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserProfile = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { userId } = (req as any).user;
   const result = await UserService.getById(userId);
   sendResponse(res, {
