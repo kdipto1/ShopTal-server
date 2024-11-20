@@ -72,6 +72,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
         (uploadedFile as any).filepath,
         {
           folder: "shoptal",
+          format: "webp",
         },
       );
       const imageUrl = uploadResult.url;
