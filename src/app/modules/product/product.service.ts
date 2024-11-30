@@ -152,7 +152,10 @@ const updateById = async (
     where: {
       id,
     },
-    data: payload,
+    data: {
+      ...payload,
+      updatedAt: new Date(),
+    },
   });
   return result;
 };
