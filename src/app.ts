@@ -1,10 +1,13 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import helmet from "helmet";
+import compression from "compression";
 import httpStatus from "http-status";
 const app: Application = express();
 
+app.use(helmet());
+app.use(compression());
 app.use(cors());
 app.use(cookieParser());
 
