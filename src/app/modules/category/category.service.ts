@@ -74,7 +74,16 @@ const getNavbarCategory = async () => {
   const result = await prisma.productCategory.findMany({
     include: {
       productSubcategory: true,
-      brands: true,
+      brands: {
+        include: {
+          brand: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
     },
     orderBy: { createdAt: "desc" },
   });

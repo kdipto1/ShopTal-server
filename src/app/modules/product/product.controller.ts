@@ -49,6 +49,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
       features = JSON.parse(fields.features[0]);
       brandId = fields.brandId[0];
       categoryId = fields.categoryId[0];
+      // subcategoryId = fields.subcategoryId[0];
       subcategoryId = fields.subcategoryId[0];
     }
     if (
@@ -56,8 +57,8 @@ const create = catchAsync(async (req: Request, res: Response) => {
       !price ||
       !quantity ||
       !brandId ||
-      !categoryId ||
-      !subcategoryId
+      !categoryId
+      // !subcategoryId
     ) {
       return sendResponse(res, {
         statusCode: httpStatus.BAD_REQUEST,
@@ -93,24 +94,37 @@ const create = catchAsync(async (req: Request, res: Response) => {
           throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
         }
 
-        const subcategory = await prisma.productSubcategory.findFirst({
-          where: { id: subcategoryId },
-        });
+        let payload;
 
-        if (!subcategory) {
-          throw new ApiError(httpStatus.NOT_FOUND, "Subcategory not found");
+        if (subcategoryId) {
+          const subcategory = await prisma.productSubcategory.findFirst({
+            where: { id: subcategoryId },
+          });
+
+          if (!subcategory) {
+            throw new ApiError(httpStatus.NOT_FOUND, "Subcategory not found");
+          }
+          payload = {
+            name,
+            price,
+            quantity,
+            brandId,
+            image: imageUrl,
+            features,
+            categoryId,
+            subcategoryId,
+          };
+        } else {
+          payload = {
+            name,
+            price,
+            quantity,
+            brandId,
+            image: imageUrl,
+            features,
+            categoryId,
+          };
         }
-
-        const payload = {
-          name,
-          price,
-          quantity,
-          brandId,
-          image: imageUrl,
-          features,
-          categoryId,
-          subcategoryId,
-        };
         const result = await ProductService.create(payload);
 
         sendResponse(res, {
@@ -120,6 +134,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
           data: result,
         });
       } catch (error) {
+        console.log(error);
         if (error) {
           cloudinary.uploader.destroy(uploadResult.public_id);
         }
@@ -139,16 +154,6 @@ const create = catchAsync(async (req: Request, res: Response) => {
     }
   });
 });
-
-// const create = catchAsync(async (req: Request, res: Response) => {
-//   const result = await ProductService.create(req, res);
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Product Created Successfully!",
-//     data: result,
-//   });
-// });
 
 const getAllOrFilter = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ProductFilterAbleFields);
@@ -232,14 +237,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
     }
 
     // Validate required fields
-    if (
-      !name ||
-      !price ||
-      !quantity ||
-      !brandId ||
-      !categoryId ||
-      !subcategoryId
-    ) {
+    if (!name || !price || !quantity || !brandId || !categoryId) {
       return sendResponse(res, {
         statusCode: httpStatus.BAD_REQUEST,
         success: false,
@@ -290,13 +288,6 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
           throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
         }
 
-        const subcategory = await prisma.productSubcategory.findFirst({
-          where: { id: subcategoryId },
-        });
-        if (!subcategory) {
-          throw new ApiError(httpStatus.NOT_FOUND, "Subcategory not found");
-        }
-
         // Check if product exists
         const existingProduct = await prisma.product.findUnique({
           where: { id },
@@ -311,16 +302,36 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
         }
 
         // Prepare payload for update
-        const payload = {
-          name,
-          price,
-          quantity,
-          brandId,
-          image: imageUrl,
-          features,
-          categoryId,
-          subcategoryId,
-        };
+
+        let payload;
+        if (subcategoryId) {
+          const subcategory = await prisma.productSubcategory.findFirst({
+            where: { id: subcategoryId },
+          });
+          if (!subcategory) {
+            throw new ApiError(httpStatus.NOT_FOUND, "Subcategory not found");
+          }
+          payload = {
+            name,
+            price,
+            quantity,
+            brandId,
+            image: imageUrl,
+            features,
+            categoryId,
+            subcategoryId,
+          };
+        } else {
+          payload = {
+            name,
+            price,
+            quantity,
+            brandId,
+            image: imageUrl,
+            features,
+            categoryId,
+          };
+        }
 
         // Update product
         const result = await ProductService.updateById(id, payload);

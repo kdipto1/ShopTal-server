@@ -48,38 +48,71 @@ model Product {
   updatedAt DateTime @updatedAt
 
   categoryId    String
-  category      ProductCategory    @relation(fields: [categoryId], references: [id])
-  subcategoryId String
-  subcategory   ProductSubcategory @relation(fields: [subcategoryId], references: [id])
+  category      ProductCategory     @relation(fields: [categoryId], references: [id])
+  subcategoryId String?
+  subcategory   ProductSubcategory? @relation(fields: [subcategoryId], references: [id])
   cartItems     CartItem[]
 
   @@map("products")
 }
 
-model Brand {
-  id   String @id @default(uuid())
-  name String @unique
+// model Brand {
+//   id   String @id @default(uuid())
+//   name String @unique
 
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+//   createdAt  DateTime         @default(now())
+//   updatedAt  DateTime         @updatedAt
+//   Product    Product[]
+//   categoryId String?
+//   category   ProductCategory? @relation(fields: [categoryId], references: [id])
+
+//   @@map("brands")
+// }
+
+// model ProductCategory {
+//   id   String @id @default(uuid())
+//   name String @unique
+
+//   createdAt          DateTime             @default(now())
+//   updatedAt          DateTime             @updatedAt
+//   productSubcategory ProductSubcategory[]
+//   products           Product[]
+//   brands             Brand[]
+
+//   @@map("categories")
+// }
+
+model Brand {
+  id         String          @id @default(uuid())
+  name       String          @unique
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
   Product    Product[]
-  categoryId String?
-  category   ProductCategory? @relation(fields: [categoryId], references: [id])
+  categories BrandCategory[]
 
   @@map("brands")
 }
 
 model ProductCategory {
-  id   String @id @default(uuid())
-  name String @unique
-
+  id                 String               @id @default(uuid())
+  name               String               @unique
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   productSubcategory ProductSubcategory[]
   products           Product[]
-  brands             Brand[]
+  brands             BrandCategory[]
 
   @@map("categories")
+}
+
+model BrandCategory {
+  brandId    String
+  categoryId String
+  brand      Brand           @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  category   ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([brandId, categoryId])
+  @@map("brand_categories")
 }
 
 model ProductSubcategory {

@@ -20,5 +20,18 @@ export type ProductCreateInput = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   features: any;
   categoryId: string;
-  subcategoryId: string;
+  subcategoryId?: string;
+};
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type ProductUpdateInput = {
+  name: string;
+  price: number;
+  quantity: number;
+  brandId: string;
+  image: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  features: any;
+  categoryId: string;
+  subcategoryId?: string;
 };

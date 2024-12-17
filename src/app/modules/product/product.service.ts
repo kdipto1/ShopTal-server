@@ -6,6 +6,7 @@ import { IPaginationOptions } from "../../../interfaces/pagination";
 import {
   IProductFilterRequest,
   ProductCreateInput,
+  ProductUpdateInput,
 } from "./product.interfaces";
 import { ProductSearchAbleFields } from "./product.constants";
 import cloudinary from "../../../config/cloudinaryConfig";
@@ -13,7 +14,11 @@ import ApiError from "../../../errors/ApiError";
 
 const create = async (payload: ProductCreateInput) => {
   const result = await prisma.product.create({
-    data: payload,
+    data: {
+      ...payload,
+      subcategoryId:
+        payload.subcategoryId === undefined ? null : payload.subcategoryId,
+    },
   });
   return result;
 };
@@ -144,16 +149,15 @@ const getById = async (id: string) => {
   return result;
 };
 
-const updateById = async (
-  id: string,
-  payload: Prisma.ProductCategoryUpdateInput,
-) => {
+const updateById = async (id: string, payload: ProductUpdateInput) => {
   const result = await prisma.product.update({
     where: {
       id,
     },
     data: {
       ...payload,
+      subcategoryId:
+        payload.subcategoryId === undefined ? null : payload.subcategoryId,
       updatedAt: new Date(),
     },
   });
