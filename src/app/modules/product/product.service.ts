@@ -172,7 +172,9 @@ const deleteById = async (id: string) => {
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const imageUrl: any = product.image;
+
   const publicId = imageUrl.split("/").pop().split(".")[0];
+
   try {
     const image = await cloudinary.uploader.destroy(`shoptal/${publicId}`);
     if (image.result !== "ok") {

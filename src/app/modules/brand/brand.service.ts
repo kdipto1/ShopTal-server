@@ -264,12 +264,20 @@ const updateById = async (
 
 // Delete remains the same
 const deleteById = async (id: string) => {
-  const result = await prisma.brand.delete({
-    where: {
-      id,
-    },
-  });
-  return result;
+  const transaction = await prisma.$transaction([
+    prisma.brandCategory.deleteMany({
+      where: {
+        brandId: id,
+      },
+    }),
+    prisma.brand.delete({
+      where: {
+        id,
+      },
+    }),
+  ]);
+
+  return transaction[1];
 };
 
 export const BrandService = {
