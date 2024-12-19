@@ -32,32 +32,42 @@ const create = catchAsync(async (req: Request, res: Response) => {
       });
     }
     const uploadedFile = file[0];
-    let name, price, quantity, features, brandId, categoryId, subcategoryId;
+    let name,
+      price,
+      quantity,
+      // features,
+      brandId,
+      categoryId,
+      subcategoryId,
+      description;
     if (
       fields?.name &&
       fields?.price &&
       fields?.quantity &&
-      fields?.features &&
+      // fields?.features &&
       fields?.brandId &&
       fields?.categoryId &&
-      fields?.subcategoryId
+      fields?.subcategoryId &&
+      fields?.description
     ) {
       name = fields.name[0];
       price = Number(fields.price[0]);
       quantity = Number(fields.quantity[0]);
 
-      features = JSON.parse(fields.features[0]);
+      // features = JSON.parse(fields.features[0]);
       brandId = fields.brandId[0];
       categoryId = fields.categoryId[0];
       // subcategoryId = fields.subcategoryId[0];
       subcategoryId = fields.subcategoryId[0];
+      description = fields.description[0];
     }
     if (
       !name ||
       !price ||
       !quantity ||
       !brandId ||
-      !categoryId
+      !categoryId ||
+      !description
       // !subcategoryId
     ) {
       return sendResponse(res, {
@@ -110,9 +120,10 @@ const create = catchAsync(async (req: Request, res: Response) => {
             quantity,
             brandId,
             image: imageUrl,
-            features,
+            // features,
             categoryId,
             subcategoryId,
+            description,
           };
         } else {
           payload = {
@@ -121,8 +132,9 @@ const create = catchAsync(async (req: Request, res: Response) => {
             quantity,
             brandId,
             image: imageUrl,
-            features,
+            // features,
             categoryId,
+            description,
           };
         }
         const result = await ProductService.create(payload);
@@ -179,17 +191,6 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const updateById = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   console.log(id);
-//   const result = await ProductService.updateById(id, req.body);
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Product Updated Successfully!",
-//     data: result,
-//   });
-// });
 const updateById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const form = new formidable.IncomingForm();
@@ -207,11 +208,12 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
     let name,
       price,
       quantity,
-      features,
+      // features,
       brandId,
       categoryId,
       subcategoryId,
-      existingImage;
+      existingImage,
+      description;
     let imageUrl;
 
     // Parse form fields
@@ -219,25 +221,34 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
       fields?.name &&
       fields?.price &&
       fields?.quantity &&
-      fields?.features &&
+      // fields?.features &&
       fields?.brandId &&
       fields?.categoryId &&
-      fields?.subcategoryId
+      fields?.subcategoryId &&
+      fields?.description
     ) {
       name = fields.name[0];
       price = Number(fields.price[0]);
       quantity = Number(fields.quantity[0]);
-      features = JSON.parse(fields.features[0]);
+      // features = JSON.parse(fields.features[0]);
       brandId = fields.brandId[0];
       categoryId = fields.categoryId[0];
       subcategoryId = fields.subcategoryId[0];
+      description = fields.description[0];
 
       // Check if existing image is being kept
       existingImage = fields.existingImage ? fields.existingImage[0] : null;
     }
 
     // Validate required fields
-    if (!name || !price || !quantity || !brandId || !categoryId) {
+    if (
+      !name ||
+      !price ||
+      !quantity ||
+      !brandId ||
+      !categoryId ||
+      !description
+    ) {
       return sendResponse(res, {
         statusCode: httpStatus.BAD_REQUEST,
         success: false,
@@ -317,9 +328,10 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
             quantity,
             brandId,
             image: imageUrl,
-            features,
+            // features,
             categoryId,
             subcategoryId,
+            description,
           };
         } else {
           payload = {
@@ -328,8 +340,9 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
             quantity,
             brandId,
             image: imageUrl,
-            features,
+            // features,
             categoryId,
+            description,
           };
         }
 

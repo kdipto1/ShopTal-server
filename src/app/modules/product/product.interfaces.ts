@@ -8,6 +8,7 @@ export type IProductFilterRequest = {
   minPrice?: number;
   maxPrice?: number;
   random?: boolean;
+  description?: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -18,9 +19,10 @@ export type ProductCreateInput = {
   brandId: string;
   image: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  features: any;
+  features?: any;
   categoryId: string;
   subcategoryId?: string;
+  description: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -31,7 +33,8 @@ export type ProductUpdateInput = {
   brandId: string;
   image: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  features: any;
+  features?: any;
   categoryId: string;
   subcategoryId?: string;
+  description: string;
 };
