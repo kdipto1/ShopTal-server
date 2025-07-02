@@ -1,24 +1,22 @@
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret, SignOptions } from "jsonwebtoken";
 
 const createToken = (
-  payload: Record<string, unknown>,
+  payload: string | object | Buffer,
   secret: Secret,
   expireTime: string,
 ): string => {
-  return jwt.sign(payload, secret, { expiresIn: expireTime });
+  const options: SignOptions = {
+    expiresIn: expireTime as SignOptions["expiresIn"],
+  };
+  return jwt.sign(payload, secret, options);
 };
 
-const verifyToken = (
-  token: string,
-  secret: Secret,
-): string | jwt.JwtPayload => {
-  try {
-    const decoded = jwt.verify(token, secret);
-    return decoded;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    throw new Error("Invalid Token");
+const verifyToken = (token: string, secret: Secret): JwtPayload => {
+  const decoded = jwt.verify(token, secret);
+  if (typeof decoded !== "object" || decoded === null) {
+    throw new Error("Invalid token");
   }
+  return decoded as JwtPayload;
 };
 
 export const JwtHelpers = {

@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { JwtHelpers } from "../../../helpers/jwtHelpers";
 import config from "../../../config";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import type { Secret } from "jsonwebtoken";
 import { ILoginResponse } from "./auth.interfaces";
 import ApiError from "../../../errors/ApiError";

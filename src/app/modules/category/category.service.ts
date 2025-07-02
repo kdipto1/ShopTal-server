@@ -85,7 +85,7 @@ const getNavbarCategory = async () => {
         },
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: "asc" },
   });
 
   // const total = await prisma.productCategory.count();

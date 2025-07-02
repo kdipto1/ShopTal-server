@@ -13,6 +13,7 @@ const globalErrorHandler: ErrorRequestHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   config.env === "development"
     ? console.log(`🐱‍🏍 globalErrorHandler ~~`, { err })
     : console.error(`🐱‍🏍 globalErrorHandler ~~`, err);
