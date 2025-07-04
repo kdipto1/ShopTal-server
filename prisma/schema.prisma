@@ -28,31 +28,33 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  cart Cart?
+  cart    Cart?
+  orders  Order[]
+  reviews Review[]
 
   @@map("users")
 }
 
 model Product {
-  id       String @id @default(uuid())
-  name     String
-  price    Float
-  quantity Int
-  brandId  String
-  brand    Brand  @relation(fields: [brandId], references: [id])
-
-  image       String
-  features    Json?
-  description String @db.Text()
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id            String  @id @default(uuid())
+  name          String
+  price         Float
+  quantity      Int
+  brandId       String
+  brand         Brand   @relation(fields: [brandId], references: [id])
+  averageRating Float   @default(0)
+  image         String
+  features      Json?
+  description   String  @db.Text()
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   categoryId    String
-  category      ProductCategory     @relation(fields: [categoryId], references: [id])
+  category      ProductCategory @relation(fields: [categoryId], references: [id])
   subcategoryId String?
   subcategory   ProductSubcategory? @relation(fields: [subcategoryId], references: [id])
   cartItems     CartItem[]
+  orderItems    OrderItem[]
+  reviews       Review[]
 
   @@map("products")
 }
@@ -157,6 +159,66 @@ model CartItem {
   @@map("cart_items")
 }
 
+model Order {
+  id              String      @id @default(uuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  totalAmount     Float
+  shippingAddress String
+  status          OrderStatus @default(PENDING)
+  couponId        String?
+  coupon          Coupon?     @relation(fields: [couponId], references: [id])
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  orderItems      OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float // Price at the time of purchase
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("order_items")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reviews")
+}
+
+model Coupon {
+  id             String       @id @default(uuid())
+  code           String       @unique
+  discountType   DiscountType
+  discountValue  Float
+  expirationDate DateTime
+  usageLimit     Int
+  used           Int          @default(0)
+  orders         Order[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("coupons")
+}
+
 enum Role {
   user
   admin
@@ -166,4 +228,17 @@ enum Status {
   active
   inactive
   disabled
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
 }

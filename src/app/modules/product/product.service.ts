@@ -1,16 +1,16 @@
-import { Prisma, ProductCategory } from "@prisma/client";
-import prisma from "../../../shared/prisma";
-import { IGenericResponse } from "../../../interfaces/common";
-import { paginationHelpers } from "../../../helpers/paginationHelper";
-import { IPaginationOptions } from "../../../interfaces/pagination";
+import { Prisma, ProductCategory } from '@prisma/client';
+import prisma from '../../../shared/prisma';
+import { IGenericResponse } from '../../../interfaces/common';
+import { paginationHelpers } from '../../../helpers/paginationHelper';
+import { IPaginationOptions } from '../../../interfaces/pagination';
 import {
   IProductFilterRequest,
   ProductCreateInput,
   ProductUpdateInput,
-} from "./product.interfaces";
-import { ProductSearchAbleFields } from "./product.constants";
-import cloudinary from "../../../config/cloudinaryConfig";
-import ApiError from "../../../errors/ApiError";
+} from './product.interfaces';
+import { ProductSearchAbleFields } from './product.constants';
+import cloudinary from '../../../config/cloudinaryConfig';
+import ApiError from '../../../errors/ApiError';
 
 const create = async (payload: ProductCreateInput) => {
   const result = await prisma.product.create({
@@ -25,7 +25,7 @@ const create = async (payload: ProductCreateInput) => {
 
 const getAllOrFilter = async (
   filters: IProductFilterRequest,
-  options: IPaginationOptions,
+  options: IPaginationOptions
 ): Promise<IGenericResponse<ProductCategory[]>> => {
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, minPrice, maxPrice, random, ...filtersData } = filters;
@@ -36,7 +36,7 @@ const getAllOrFilter = async (
       OR: ProductSearchAbleFields.map(field => ({
         [field]: {
           contains: searchTerm,
-          mode: "insensitive",
+          mode: 'insensitive',
         },
       })),
     });
@@ -85,7 +85,7 @@ const getAllOrFilter = async (
       take: limit,
       orderBy: {
         // Optional: add additional randomization with random ordering
-        id: "asc", // or any other field
+        id: 'asc', // or any other field
       },
     });
 
@@ -108,7 +108,7 @@ const getAllOrFilter = async (
         ? {
             [options.sortBy]: options.sortOrder,
           }
-        : { createdAt: "desc" },
+        : { createdAt: 'desc' },
   });
 
   const total = await prisma.product.count({ where: whereConditions });
@@ -173,20 +173,35 @@ const deleteById = async (id: string) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const imageUrl: any = product.image;
 
-  const publicId = imageUrl.split("/").pop().split(".")[0];
+  const publicId = imageUrl.split('/').pop().split('.')[0];
 
   try {
     const image = await cloudinary.uploader.destroy(`shoptal/${publicId}`);
-    if (image.result !== "ok") {
-      throw new ApiError(500, "Failed to delete product image");
+    if (image.result !== 'ok') {
+      throw new ApiError(500, 'Failed to delete product image');
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    throw new ApiError(500, "Failed to delete product image");
+    throw new ApiError(500, 'Failed to delete product image');
   }
   const result = await prisma.product.delete({
     where: {
       id,
+    },
+  });
+  return result;
+};
+
+const updateProductStock = async (
+  productId: string,
+  quantity: number
+) => {
+  const result = await prisma.product.update({
+    where: {
+      id: productId,
+    },
+    data: {
+      quantity,
     },
   });
   return result;
@@ -198,4 +213,5 @@ export const ProductService = {
   getById,
   updateById,
   deleteById,
+  updateProductStock,
 };
