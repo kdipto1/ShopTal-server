@@ -5,6 +5,8 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { IOrder } from "./order.interfaces";
 import { Order } from "@prisma/client";
+import { OrderFilterAbleFields } from "./order.constants";
+import pick from "../../../shared/pick";
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,8 +47,21 @@ const updateOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllOrFilter = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, OrderFilterAbleFields);
+  const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+  const result = await OrderService.getAllOrFilter(filters, options);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Order's Retrieved Successfully!",
+    data: result,
+  });
+});
+
 export const OrderController = {
   createOrder,
   getOrders,
   updateOrder,
+  getAllOrFilter,
 };

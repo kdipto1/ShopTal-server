@@ -1,7 +1,7 @@
 import express from "express";
 import { SubcategoryController } from "./subcategory.controller";
-import auth from "@/app/middlewares/auth";
-import { ENUM_USER_ROLE } from "@/enums/user";
+import auth from "../../middlewares/auth";
+import { ENUM_USER_ROLE } from "../../../enums/user";
 
 const router = express.Router();
 

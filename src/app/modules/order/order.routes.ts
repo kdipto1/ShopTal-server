@@ -13,9 +13,10 @@ router.post(
   validateRequest(OrderValidation.createOrderZodSchema),
   OrderController.createOrder,
 );
+router.get("/", auth(ENUM_USER_ROLE.ADMIN), OrderController.getAllOrFilter);
 
 router.get(
-  "/",
+  "/my",
   auth(ENUM_USER_ROLE.USER, ENUM_USER_ROLE.ADMIN),
   OrderController.getOrders,
 );

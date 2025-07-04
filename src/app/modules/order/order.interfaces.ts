@@ -13,3 +13,10 @@ export type IOrderPayload = {
 export type IOrder = Order & {
   orderItems: OrderItem[];
 };
+
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+export type IOrderFilterRequest = {
+  searchTerm?: string;
+  id?: string;
+  userId?: string;
+};
