@@ -28,4 +28,10 @@ router.patch(
   OrderController.updateOrder,
 );
 
+router.get(
+  "/:orderId",
+  auth(ENUM_USER_ROLE.ADMIN),
+  OrderController.getOrderById,
+);
+
 export const OrderRoutes = router;

@@ -274,9 +274,31 @@ const getAllOrFilter = async (
   };
 };
 
+const getOrderById = async (orderId: string): Promise<IOrder | null> => {
+  const order = await prisma.order.findUnique({
+    where: {
+      id: orderId,
+    },
+    include: {
+      orderItems: {
+        include: {
+          product: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return order;
+};
+
 export const OrderService = {
   createOrder,
   getOrders,
   updateOrder,
   getAllOrFilter,
+  getOrderById,
 };

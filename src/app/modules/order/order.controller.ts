@@ -59,9 +59,22 @@ const getAllOrFilter = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getOrderById = catchAsync(async (req: Request, res: Response) => {
+  const { orderId } = req.params;
+  const result = await OrderService.getOrderById(orderId);
+
+  sendResponse<IOrder>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Order retrieved successfully",
+    data: result,
+  });
+});
+
 export const OrderController = {
   createOrder,
   getOrders,
   updateOrder,
   getAllOrFilter,
+  getOrderById,
 };
