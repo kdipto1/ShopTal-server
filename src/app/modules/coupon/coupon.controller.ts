@@ -43,7 +43,6 @@ const getSingleCoupon = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllOrFilter = catchAsync(async (req: Request, res: Response) => {
-  console.log(req.query);
   const filters = pick(req.query, CouponFilterAbleFields);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await CouponService.getAllOrFilter(filters, options);

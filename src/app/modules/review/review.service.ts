@@ -1,16 +1,16 @@
-import { Prisma, Review } from '@prisma/client';
-import prisma from '../../../shared/prisma';
-import { IReviewPayload } from './review.interfaces';
-import ApiError from '../../../errors/ApiError';
-import httpStatus from 'http-status';
+import { Review } from "@prisma/client";
+import prisma from "../../../shared/prisma";
+import { IReviewPayload } from "./review.interfaces";
+import ApiError from "../../../errors/ApiError";
+import httpStatus from "http-status";
 
 const createReview = async (
   userId: string,
-  payload: IReviewPayload
+  payload: IReviewPayload,
 ): Promise<Review> => {
   const { productId, rating, comment } = payload;
 
-  const newReview = await prisma.$transaction(async (transaction: Prisma.TransactionClient) => {
+  const newReview = await prisma.$transaction(async transaction => {
     const product = await transaction.product.findUnique({
       where: { id: productId },
       include: {
@@ -19,7 +19,40 @@ const createReview = async (
     });
 
     if (!product) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+      throw new ApiError(httpStatus.NOT_FOUND, "Product not found");
+    }
+
+    const existingReview = await transaction.review.findFirst({
+      where: {
+        userId,
+        productId,
+      },
+    });
+
+    if (existingReview) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "You have already reviewed this product",
+      );
+    }
+
+    const deliveredOrder = await transaction.order.findFirst({
+      where: {
+        userId,
+        status: "DELIVERED",
+        orderItems: {
+          some: {
+            productId,
+          },
+        },
+      },
+    });
+
+    if (!deliveredOrder) {
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        "You can only review products that you have purchased and received",
+      );
     }
 
     const review = await transaction.review.create({
@@ -37,7 +70,10 @@ const createReview = async (
       },
     });
 
-    const totalRating = reviews.reduce((acc: number, review: Review) => acc + review.rating, 0);
+    const totalRating = reviews.reduce(
+      (acc: number, review: Review) => acc + review.rating,
+      0,
+    );
     const averageRating = totalRating / reviews.length;
 
     await transaction.product.update({
