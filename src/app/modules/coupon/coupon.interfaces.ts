@@ -10,3 +10,8 @@ export type ICouponPayload = {
 };
 
 export type ICoupon = Coupon;
+
+export type ICouponFilterRequest = {
+  searchTerm?: string;
+  code?: string;
+};

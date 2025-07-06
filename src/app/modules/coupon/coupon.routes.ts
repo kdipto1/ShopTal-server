@@ -7,7 +7,7 @@ import { CouponValidation } from "./coupon.validation";
 
 const router = express.Router();
 
-router.get("/", auth(ENUM_USER_ROLE.ADMIN), CouponController.getAllCoupons);
+router.get("/", auth(ENUM_USER_ROLE.ADMIN), CouponController.getAllOrFilter);
 
 router.post(
   "/",
