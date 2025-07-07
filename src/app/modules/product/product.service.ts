@@ -144,20 +144,6 @@ const getById = async (id: string) => {
           name: true,
         },
       },
-      reviews: {
-        select: {
-          id: true,
-          rating: true,
-          createdAt: true,
-          comment: true,
-          user: {
-            select: {
-              firstName: true,
-              lastName: true,
-            },
-          },
-        },
-      },
     },
   });
   return result;

@@ -3,6 +3,9 @@ import prisma from "../../../shared/prisma";
 import { IReviewPayload } from "./review.interfaces";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "http-status";
+import { IPaginationOptions } from "../../../interfaces/pagination";
+import { IGenericResponse } from "../../../interfaces/common";
+import { paginationHelpers } from "../../../helpers/paginationHelper";
 
 const createReview = async (
   userId: string,
@@ -89,7 +92,11 @@ const createReview = async (
   return newReview;
 };
 
-const getReviews = async (productId: string): Promise<Review[]> => {
+const getReviews = async (
+  productId: string,
+  options: IPaginationOptions,
+): Promise<IGenericResponse<Review[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatePagination(options);
   const reviews = await prisma.review.findMany({
     where: {
       productId,
@@ -102,8 +109,22 @@ const getReviews = async (productId: string): Promise<Review[]> => {
         },
       },
     },
+    skip,
+    take: limit,
   });
-  return reviews;
+  const total = await prisma.review.count({
+    where: {
+      productId,
+    },
+  });
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: reviews,
+  };
 };
 
 export const ReviewService = {

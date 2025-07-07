@@ -1,20 +1,20 @@
-import { z } from 'zod';
-import { OrderStatus } from '@prisma/client';
+import { z } from "zod";
+import { OrderStatus } from "@prisma/client";
 
 const createOrderZodSchema = z.object({
   body: z.object({
     shippingAddress: z.string({
-      required_error: 'Shipping address is required',
+      required_error: "Shipping address is required",
     }),
     items: z.array(
       z.object({
         productId: z.string({
-          required_error: 'Product ID is required',
+          required_error: "Product ID is required",
         }),
         quantity: z.number({
-          required_error: 'Quantity is required',
+          required_error: "Quantity is required",
         }),
-      })
+      }),
     ),
     couponCode: z.string().optional(),
   }),
@@ -31,8 +31,8 @@ const updateOrderZodSchema = z.object({
         OrderStatus.CANCELED,
       ],
       {
-        required_error: 'Status is required',
-      }
+        required_error: "Status is required",
+      },
     ),
   }),
 });

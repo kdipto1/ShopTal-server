@@ -1,2 +1,1 @@
-
 // Define your interfaces here

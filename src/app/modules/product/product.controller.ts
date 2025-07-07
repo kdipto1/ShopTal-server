@@ -1,14 +1,14 @@
-import { Request, Response } from 'express';
-import catchAsync from '../../../shared/catchAsync';
-import sendResponse from '../../../shared/sendResponse';
-import httpStatus from 'http-status';
-import pick from '../../../shared/pick';
-import { ProductFilterAbleFields } from './product.constants';
-import { ProductService } from './product.service';
-import * as formidable from 'formidable';
-import cloudinary from '../../../config/cloudinaryConfig';
-import prisma from '../../../shared/prisma';
-import ApiError from '../../../errors/ApiError';
+import { Request, Response } from "express";
+import catchAsync from "../../../shared/catchAsync";
+import sendResponse from "../../../shared/sendResponse";
+import httpStatus from "http-status";
+import pick from "../../../shared/pick";
+import { ProductFilterAbleFields } from "./product.constants";
+import { ProductService } from "./product.service";
+import * as formidable from "formidable";
+import cloudinary from "../../../config/cloudinaryConfig";
+import prisma from "../../../shared/prisma";
+import ApiError from "../../../errors/ApiError";
 
 const create = catchAsync(async (req: Request, res: Response) => {
   const form = new formidable.IncomingForm();
@@ -19,7 +19,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
       return sendResponse(res, {
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         success: false,
-        message: 'Error parsing form data',
+        message: "Error parsing form data",
       });
     }
 
@@ -28,7 +28,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
       return sendResponse(res, {
         statusCode: httpStatus.BAD_REQUEST,
         success: false,
-        message: 'No file uploaded',
+        message: "No file uploaded",
       });
     }
     const uploadedFile = file[0];
@@ -73,7 +73,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
       return sendResponse(res, {
         statusCode: httpStatus.BAD_REQUEST,
         success: false,
-        message: 'Missing required fields',
+        message: "Missing required fields",
       });
     }
 
@@ -82,9 +82,9 @@ const create = catchAsync(async (req: Request, res: Response) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (uploadedFile as any).filepath,
         {
-          folder: 'shoptal',
-          format: 'webp',
-        }
+          folder: "shoptal",
+          format: "webp",
+        },
       );
       const imageUrl = uploadResult.url;
 
@@ -94,14 +94,14 @@ const create = catchAsync(async (req: Request, res: Response) => {
         });
 
         if (!brand) {
-          throw new ApiError(httpStatus.NOT_FOUND, 'Brand not found');
+          throw new ApiError(httpStatus.NOT_FOUND, "Brand not found");
         }
         const category = await prisma.productCategory.findFirst({
           where: { id: categoryId },
         });
 
         if (!category) {
-          throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+          throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
         }
 
         let payload;
@@ -112,7 +112,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
           });
 
           if (!subcategory) {
-            throw new ApiError(httpStatus.NOT_FOUND, 'Subcategory not found');
+            throw new ApiError(httpStatus.NOT_FOUND, "Subcategory not found");
           }
           payload = {
             name,
@@ -142,7 +142,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
         sendResponse(res, {
           statusCode: httpStatus.OK,
           success: true,
-          message: 'Product Created Successfully!',
+          message: "Product Created Successfully!",
           data: result,
         });
       } catch (error) {
@@ -153,7 +153,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
         sendResponse(res, {
           statusCode: httpStatus.INTERNAL_SERVER_ERROR,
           success: false,
-          message: 'Error creating product',
+          message: "Error creating product",
         });
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -161,7 +161,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
       sendResponse(res, {
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         success: false,
-        message: 'Error uploading file',
+        message: "Error uploading file",
       });
     }
   });
@@ -169,7 +169,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
 
 const getAllOrFilter = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ProductFilterAbleFields);
-  const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
+  const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await ProductService.getAllOrFilter(filters, options);
   // console.log(req);
   sendResponse(res, {
@@ -186,7 +186,7 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product Retrieved Successfully!',
+    message: "Product Retrieved Successfully!",
     data: result,
   });
 });
@@ -201,7 +201,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
       return sendResponse(res, {
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         success: false,
-        message: 'Error parsing form data',
+        message: "Error parsing form data",
       });
     }
 
@@ -252,7 +252,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
       return sendResponse(res, {
         statusCode: httpStatus.BAD_REQUEST,
         success: false,
-        message: 'Missing required fields',
+        message: "Missing required fields",
       });
     }
 
@@ -267,9 +267,9 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (file[0] as any).filepath,
           {
-            folder: 'shoptal',
-            format: 'webp',
-          }
+            folder: "shoptal",
+            format: "webp",
+          },
         );
         imageUrl = uploadResult.url;
       } else if (existingImage) {
@@ -279,7 +279,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
         return sendResponse(res, {
           statusCode: httpStatus.BAD_REQUEST,
           success: false,
-          message: 'No image provided',
+          message: "No image provided",
         });
       }
 
@@ -289,14 +289,14 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
           where: { id: brandId },
         });
         if (!brand) {
-          throw new ApiError(httpStatus.NOT_FOUND, 'Brand not found');
+          throw new ApiError(httpStatus.NOT_FOUND, "Brand not found");
         }
 
         const category = await prisma.productCategory.findFirst({
           where: { id: categoryId },
         });
         if (!category) {
-          throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+          throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
         }
 
         // Check if product exists
@@ -308,7 +308,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
           return sendResponse(res, {
             statusCode: httpStatus.NOT_FOUND,
             success: false,
-            message: 'Product not found',
+            message: "Product not found",
           });
         }
 
@@ -320,7 +320,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
             where: { id: subcategoryId },
           });
           if (!subcategory) {
-            throw new ApiError(httpStatus.NOT_FOUND, 'Subcategory not found');
+            throw new ApiError(httpStatus.NOT_FOUND, "Subcategory not found");
           }
           payload = {
             name,
@@ -354,7 +354,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
           try {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const existingImageUrl: any = existingProduct.image;
-            const publicId = existingImageUrl.split('/').pop().split('.')[0];
+            const publicId = existingImageUrl.split("/").pop().split(".")[0];
             // Extract public ID from the existing image URL
             // const matches = existingProduct.image.match(/\/v\d+\/(.+)\.\w+$/);
             // if (matches) {
@@ -362,14 +362,14 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
             await cloudinary.uploader.destroy(`shoptal/${publicId}`);
             // }
           } catch (deleteError) {
-            console.error('Failed to delete old image:', deleteError);
+            console.error("Failed to delete old image:", deleteError);
           }
         }
 
         sendResponse(res, {
           statusCode: httpStatus.OK,
           success: true,
-          message: 'Product Updated Successfully!',
+          message: "Product Updated Successfully!",
           data: result,
         });
       } catch (error) {
@@ -385,7 +385,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
           message:
             error instanceof ApiError
               ? error.message
-              : 'Error updating product',
+              : "Error updating product",
         });
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -393,7 +393,7 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
       sendResponse(res, {
         statusCode: httpStatus.INTERNAL_SERVER_ERROR,
         success: false,
-        message: 'Error uploading file',
+        message: "Error uploading file",
       });
     }
   });
@@ -405,7 +405,7 @@ const deleteById = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product Deleted Successfully!',
+    message: "Product Deleted Successfully!",
     data: result,
   });
 });
@@ -418,7 +418,7 @@ const updateProductStock = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Product stock updated successfully',
+    message: "Product stock updated successfully",
     data: result,
   });
 });
