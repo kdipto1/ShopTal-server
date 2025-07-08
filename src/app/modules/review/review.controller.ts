@@ -29,16 +29,28 @@ const getReviews = catchAsync(async (req: Request, res: Response) => {
   ]);
   const result = await ReviewService.getReviews(productId, paginationOptions);
 
-  sendResponse<Review[]>(res, {
+  sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Reviews retrieved successfully",
-    meta: result.meta,
-    data: result.data,
+    data: result,
+  });
+});
+
+const updateReview = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await ReviewService.updateReview(id, req.body);
+
+  sendResponse<Review>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Review updated successfully",
+    data: result,
   });
 });
 
 export const ReviewController = {
   createReview,
   getReviews,
+  updateReview,
 };

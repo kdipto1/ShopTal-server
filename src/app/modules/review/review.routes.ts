@@ -16,4 +16,11 @@ router.post(
 
 router.get("/:productId", ReviewController.getReviews);
 
+router.patch(
+  "/:id",
+  auth(ENUM_USER_ROLE.USER, ENUM_USER_ROLE.ADMIN),
+  validateRequest(ReviewValidation.updateReviewZodSchema),
+  ReviewController.updateReview,
+);
+
 export const ReviewRoutes = router;

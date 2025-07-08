@@ -106,6 +106,7 @@ const getReviews = async (
         select: {
           firstName: true,
           lastName: true,
+          id: true,
         },
       },
     },
@@ -127,7 +128,28 @@ const getReviews = async (
   };
 };
 
+const updateReview = async (
+  id: string,
+  payload: Partial<IReviewPayload>,
+): Promise<Review> => {
+  const review = await prisma.review.findUnique({
+    where: { id },
+  });
+
+  if (!review) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Review not found");
+  }
+
+  const updatedReview = await prisma.review.update({
+    where: { id },
+    data: payload,
+  });
+
+  return updatedReview;
+};
+
 export const ReviewService = {
   createReview,
   getReviews,
+  updateReview,
 };

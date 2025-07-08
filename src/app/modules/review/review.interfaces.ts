@@ -7,4 +7,9 @@ export type IReviewPayload = {
   comment?: string;
 };
 
+export type IReviewUpdatePayload = {
+  rating?: number;
+  comment?: string;
+};
+
 export type IReview = Review;
