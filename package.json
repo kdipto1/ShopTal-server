@@ -29,7 +29,9 @@
     "formidable": "^3.5.4",
     "helmet": "^8.0.0",
     "http-status": "1.7.4",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "stripe": "^18.3.0",
+    "zod": "^3.25.71"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

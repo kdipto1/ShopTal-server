@@ -14,6 +14,9 @@ export default {
     refresh_secret: process.env.JWT_REFRESH_SECRET,
     refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
   },
+  stripe: {
+    secret_key: process.env.STRIPE_SECRET_KEY,
+  },
   cloudier: {
     name: process.env.CLOUDINARY_cloud_name,
     key: process.env.CLOUDINARY_api_key,

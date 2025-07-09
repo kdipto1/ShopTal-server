@@ -410,10 +410,24 @@ const deleteById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateProductStock = catchAsync(async (req: Request, res: Response) => {
+  const { productId } = req.params;
+  const { quantity } = req.body;
+  const result = await ProductService.updateProductStock(productId, quantity);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product stock updated successfully",
+    data: result,
+  });
+});
+
 export const ProductController = {
   create,
   getAllOrFilter,
   getById,
   updateById,
   deleteById,
+  updateProductStock,
 };

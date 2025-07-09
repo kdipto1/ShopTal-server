@@ -192,10 +192,23 @@ const deleteById = async (id: string) => {
   return result;
 };
 
+const updateProductStock = async (productId: string, quantity: number) => {
+  const result = await prisma.product.update({
+    where: {
+      id: productId,
+    },
+    data: {
+      quantity,
+    },
+  });
+  return result;
+};
+
 export const ProductService = {
   create,
   getAllOrFilter,
   getById,
   updateById,
   deleteById,
+  updateProductStock,
 };
