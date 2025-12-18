@@ -1,4 +1,4 @@
-import { Prisma, ProductCategory } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
@@ -7,6 +7,7 @@ import {
   IProductFilterRequest,
   ProductCreateInput,
   ProductUpdateInput,
+  IProductWithCategoryAndReviews,
 } from "./product.interfaces";
 import { ProductSearchAbleFields } from "./product.constants";
 import cloudinary from "../../../config/cloudinaryConfig";
@@ -26,7 +27,7 @@ const create = async (payload: ProductCreateInput) => {
 const getAllOrFilter = async (
   filters: IProductFilterRequest,
   options: IPaginationOptions,
-): Promise<IGenericResponse<ProductCategory[]>> => {
+): Promise<IGenericResponse<IProductWithCategoryAndReviews[]>> => {
   const { page, limit, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, minPrice, maxPrice, random, ...filtersData } = filters;
 
@@ -83,6 +84,18 @@ const getAllOrFilter = async (
       where: whereConditions,
       skip: randomSkip,
       take: limit,
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        _count: {
+          select: {
+            reviews: true,
+          },
+        },
+      },
       orderBy: {
         // Optional: add additional randomization with random ordering
         id: "asc", // or any other field
@@ -103,6 +116,18 @@ const getAllOrFilter = async (
     where: whereConditions,
     skip,
     take: limit,
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      _count: {
+        select: {
+          reviews: true,
+        },
+      },
+    },
     orderBy:
       options.sortBy && options.sortOrder
         ? {

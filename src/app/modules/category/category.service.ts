@@ -56,6 +56,19 @@ const getAllOrFilter = async (
             [options.sortBy]: options.sortOrder,
           }
         : { createdAt: "desc" },
+    include: {
+      productSubcategory: true,
+      brands: {
+        include: {
+          brand: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   const total = await prisma.productCategory.count({ where: whereConditions });

@@ -12,6 +12,30 @@ export type IProductFilterRequest = {
 };
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type IProductWithCategoryAndReviews = {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  brandId: string;
+  averageRating: number;
+  image: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  features?: any;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  categoryId: string;
+  subcategoryId?: string | null;
+  category?: {
+    name: string;
+  };
+  _count?: {
+    reviews: number;
+  };
+};
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type ProductCreateInput = {
   name: string;
   price: number;
