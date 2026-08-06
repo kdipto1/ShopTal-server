@@ -1,47 +1,23 @@
 import { Request, Response } from "express";
+import httpStatus from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
-import httpStatus from "http-status";
 import { AnalyticsService } from "./analytics.service";
+import { AnalyticsRange } from "./analytics.interfaces";
 
-const getProductPerformance = catchAsync(
+const getDashboardAnalytics = catchAsync(
   async (req: Request, res: Response) => {
-    const result = await AnalyticsService.getProductPerformance();
+    const range = (req.query.range as AnalyticsRange) || "30d";
+    const result = await AnalyticsService.getDashboardAnalytics(range);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Products Performances Retrieved Successfully!",
-      data: result,
-    });
-  },
-);
-const getCartsAbandonmentRate = catchAsync(
-  async (req: Request, res: Response) => {
-    const result = await AnalyticsService.getCartsAbandonmentRate();
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Products Performances Retrieved Successfully!",
-      data: result,
-    });
-  },
-);
-
-const getTotalAllTableCounts = catchAsync(
-  async (req: Request, res: Response) => {
-    const result = await AnalyticsService.getTotalAllTableCounts();
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message:
-        "Total counts of users, products, brands, categories, subcategories retrieved!",
+      message: "Dashboard analytics retrieved successfully!",
       data: result,
     });
   },
 );
 
 export const AnalyticsController = {
-  getProductPerformance,
-  getCartsAbandonmentRate,
-  getTotalAllTableCounts,
+  getDashboardAnalytics,
 };

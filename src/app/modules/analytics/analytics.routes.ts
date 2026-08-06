@@ -1,26 +1,17 @@
 import express from "express";
 import auth from "../../middlewares/auth";
+import validateRequest from "../../middlewares/validateRequest";
 import { ENUM_USER_ROLE } from "../../../enums/user";
 import { AnalyticsController } from "./analytics.controller";
+import { AnalyticsValidation } from "./analytics.validation";
 
 const router = express.Router();
 
 router.get(
-  "/products/performance",
+  "/dashboard",
   auth(ENUM_USER_ROLE.ADMIN),
-  AnalyticsController.getProductPerformance,
-);
-
-router.get(
-  "/carts/abandonment-rate",
-  auth(ENUM_USER_ROLE.ADMIN),
-  AnalyticsController.getCartsAbandonmentRate,
-);
-
-router.get(
-  "/counts",
-  auth(ENUM_USER_ROLE.ADMIN),
-  AnalyticsController.getTotalAllTableCounts,
+  validateRequest(AnalyticsValidation.getDashboardAnalyticsZodSchema),
+  AnalyticsController.getDashboardAnalytics,
 );
 
 export const AnalyticsRoutes = router;
