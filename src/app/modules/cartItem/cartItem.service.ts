@@ -6,6 +6,8 @@ import { IPaginationOptions } from "../../../interfaces/pagination";
 import { CartItemSearchAbleFields } from "./cartItem.constants";
 import { ICartItemFilterRequest } from "./cartItem.interfaces";
 import { JwtPayload } from "jsonwebtoken";
+import ApiError from "../../../errors/ApiError";
+import httpStatus from "http-status";
 
 const create = async (
   payload: { productId: string; quantity: number },
@@ -137,30 +139,38 @@ const getAllOrFilter = async (
   };
 };
 
-const getById = async (id: string) => {
+const getById = async (id: string, user?: { userId?: string; role?: string }) => {
   const result = await prisma.cartItem.findUnique({
     where: {
       id,
     },
+    include: { cart: true },
   });
+  if (!result || (user?.role !== "admin" && result.cart.userId !== user?.userId)) {
+    return null;
+  }
   return result;
 };
 
-const updateById = async (id: string, payload: Prisma.CartItemUpdateInput) => {
+const updateById = async (
+  id: string,
+  payload: Prisma.CartItemUpdateInput,
+  user?: { userId?: string; role?: string },
+) => {
+  const item = await getById(id, user);
+  if (!item) throw new ApiError(httpStatus.NOT_FOUND, "Cart item not found");
   const result = await prisma.cartItem.update({
-    where: {
-      id,
-    },
+    where: { id: item.id },
     data: payload,
   });
   return result;
 };
 
-const deleteById = async (id: string) => {
+const deleteById = async (id: string, user?: { userId?: string; role?: string }) => {
+  const item = await getById(id, user);
+  if (!item) throw new ApiError(httpStatus.NOT_FOUND, "Cart item not found");
   const result = await prisma.cartItem.delete({
-    where: {
-      id,
-    },
+    where: { id: item.id },
   });
   return result;
 };

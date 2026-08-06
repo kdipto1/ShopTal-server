@@ -27,8 +27,18 @@ const createCoupon = async (payload: ICouponPayload): Promise<Coupon> => {
 
 const applyCoupon = async (
   couponCode: string,
-  totalAmount: number,
+  userId: string,
 ): Promise<number> => {
+  const cart = await prisma.cart.findUnique({
+    where: { userId },
+    include: { cartItems: { include: { product: true } } },
+  });
+  const totalAmount = (cart?.cartItems || []).reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0,
+  );
+  if (totalAmount <= 0) throw new ApiError(httpStatus.BAD_REQUEST, "Your cart is empty");
+
   const coupon = await prisma.coupon.findUnique({
     where: {
       code: couponCode,
@@ -53,12 +63,12 @@ const applyCoupon = async (
   let discountedAmount = 0;
 
   if (coupon.discountType === "PERCENTAGE") {
-    discountedAmount = totalAmount * (coupon.discountValue / 100);
+    discountedAmount = totalAmount * (Math.min(coupon.discountValue, 100) / 100);
   } else if (coupon.discountType === "FIXED_AMOUNT") {
-    discountedAmount = coupon.discountValue;
+    discountedAmount = Math.min(coupon.discountValue, totalAmount);
   }
 
-  return totalAmount - discountedAmount;
+  return Math.max(0, totalAmount - discountedAmount);
 };
 
 const getSingleCoupon = async (id: string): Promise<Coupon | null> => {
@@ -68,6 +78,25 @@ const getSingleCoupon = async (id: string): Promise<Coupon | null> => {
     },
   });
   return result;
+};
+
+const updateCoupon = async (
+  id: string,
+  payload: Partial<ICouponPayload> & { expirationDate?: string | Date },
+): Promise<Coupon> => {
+  return prisma.coupon.update({
+    where: { id },
+    data: {
+      ...payload,
+      expirationDate: payload.expirationDate
+        ? new Date(payload.expirationDate)
+        : undefined,
+    },
+  });
+};
+
+const deleteCoupon = async (id: string): Promise<Coupon> => {
+  return prisma.coupon.delete({ where: { id } });
 };
 
 const getAllOrFilter = async (
@@ -138,4 +167,6 @@ export const CouponService = {
   getSingleCoupon,
   getAllCoupons,
   getAllOrFilter,
+  updateCoupon,
+  deleteCoupon,
 };

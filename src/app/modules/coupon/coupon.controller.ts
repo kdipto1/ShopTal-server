@@ -19,8 +19,10 @@ const createCoupon = catchAsync(async (req: Request, res: Response) => {
 });
 
 const applyCoupon = catchAsync(async (req: Request, res: Response) => {
-  const { couponCode, totalAmount } = req.body;
-  const result = await CouponService.applyCoupon(couponCode, totalAmount);
+  const { couponCode } = req.body;
+  const userId = (req as Request & { user?: { userId: string } }).user?.userId;
+  if (!userId) throw new Error("Authentication required");
+  const result = await CouponService.applyCoupon(couponCode, userId);
 
   sendResponse<number>(res, {
     statusCode: httpStatus.OK,
@@ -65,10 +67,32 @@ const getAllCoupons = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateCoupon = catchAsync(async (req: Request, res: Response) => {
+  const result = await CouponService.updateCoupon(req.params.id, req.body);
+  sendResponse<ICoupon>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Coupon updated successfully",
+    data: result,
+  });
+});
+
+const deleteCoupon = catchAsync(async (req: Request, res: Response) => {
+  const result = await CouponService.deleteCoupon(req.params.id);
+  sendResponse<ICoupon>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Coupon deleted successfully",
+    data: result,
+  });
+});
+
 export const CouponController = {
   createCoupon,
   applyCoupon,
   getSingleCoupon,
   getAllCoupons,
   getAllOrFilter,
+  updateCoupon,
+  deleteCoupon,
 };

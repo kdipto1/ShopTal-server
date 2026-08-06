@@ -1,11 +1,9 @@
 import { Server } from "http";
 import app from "./app";
 import config from "./config";
-import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 
 async function bootstrap() {
   const server: Server = app.listen(config.port, () => {
-    app.use(globalErrorHandler);
     console.info(`Server running on port http://localhost:${config.port}/`);
   });
 

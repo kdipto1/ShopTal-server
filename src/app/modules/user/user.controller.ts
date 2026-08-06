@@ -45,7 +45,9 @@ const getUserProfile = catchAsync(async (req: Request, res: Response) => {
 
 const updateById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await UserService.updateById(id, req.body);
+  // The service applies the same ownership rule for every caller.
+  const requester = (req as Request & { user?: { userId: string; role: string } }).user;
+  const result = await UserService.updateById(id, req.body, requester);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

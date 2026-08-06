@@ -108,12 +108,27 @@ const getUserProfile = async (userId: string) => {
   return result;
 };
 
-const updateById = async (id: string, payload: Partial<User>) => {
+const updateById = async (
+  id: string,
+  payload: Partial<User>,
+  requester?: { userId: string; role: string },
+) => {
+  if (!requester || (requester.role !== "admin" && requester.userId !== id)) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You cannot update this account");
+  }
+
+  const allowedFields = ["firstName", "lastName", "email", "phone", "address"] as const;
+  const data = Object.fromEntries(
+    allowedFields
+      .filter(field => payload[field] !== undefined)
+      .map(field => [field, payload[field]]),
+  ) as Partial<User>;
+
   const result = await prisma.user.update({
     where: {
       id,
     },
-    data: payload,
+    data,
   });
   if (!result) throw new ApiError(httpStatus.NOT_MODIFIED, "Failed to update");
   return result;

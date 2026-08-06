@@ -5,7 +5,7 @@ const createOrderZodSchema = z.object({
   body: z.object({
     shippingAddress: z.string({
       required_error: "Shipping address is required",
-    }),
+    }).trim().min(5).max(500),
     items: z.array(
       z.object({
         productId: z.string({
@@ -13,10 +13,10 @@ const createOrderZodSchema = z.object({
         }),
         quantity: z.number({
           required_error: "Quantity is required",
-        }),
+        }).int().positive().max(100),
       }),
-    ),
-    couponCode: z.string().optional(),
+    ).min(1).max(50),
+    couponCode: z.string().trim().max(50).optional(),
   }),
 });
 

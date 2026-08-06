@@ -75,6 +75,10 @@ const login = async (payload: {
   });
   if (!isUserExists) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
 
+  if (isUserExists.status !== "active") {
+    throw new ApiError(httpStatus.FORBIDDEN, "This account is inactive");
+  }
+
   const isPasswordCorrect = await bcrypt.compare(
     password as string,
     isUserExists.password,

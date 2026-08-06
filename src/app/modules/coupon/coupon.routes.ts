@@ -16,6 +16,19 @@ router.post(
   CouponController.createCoupon,
 );
 
+router.patch(
+  "/:id",
+  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(CouponValidation.updateCouponZodSchema),
+  CouponController.updateCoupon,
+);
+
+router.delete(
+  "/:id",
+  auth(ENUM_USER_ROLE.ADMIN),
+  CouponController.deleteCoupon,
+);
+
 router.post(
   "/apply",
   auth(ENUM_USER_ROLE.USER, ENUM_USER_ROLE.ADMIN),

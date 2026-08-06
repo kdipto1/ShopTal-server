@@ -131,6 +131,7 @@ const getReviews = async (
 const updateReview = async (
   id: string,
   payload: Partial<IReviewPayload>,
+  requester?: { userId: string; role: string },
 ): Promise<Review> => {
   const review = await prisma.review.findUnique({
     where: { id },
@@ -138,6 +139,10 @@ const updateReview = async (
 
   if (!review) {
     throw new ApiError(httpStatus.NOT_FOUND, "Review not found");
+  }
+
+  if (!requester || (requester.role !== "admin" && review.userId !== requester.userId)) {
+    throw new ApiError(httpStatus.FORBIDDEN, "You cannot update this review");
   }
 
   const updatedReview = await prisma.review.update({

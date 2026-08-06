@@ -1,14 +1,18 @@
 import { Request, Response } from "express";
-import catchAsync from "../../../shared/catchAsync";
-import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
+import catchAsync from "../../../shared/catchAsync";
 import pick from "../../../shared/pick";
-import { CartItemService } from "./cartItem.service";
+import sendResponse from "../../../shared/sendResponse";
 import { CartItemFilterAbleFields } from "./cartItem.constants";
-import { JwtPayload } from "jsonwebtoken";
+import { CartItemService } from "./cartItem.service";
+
+interface CartUser {
+  userId?: string;
+  role?: string;
+}
 
 const create = catchAsync(async (req: Request, res: Response) => {
-  const user = (req as Request & { user?: JwtPayload }).user;
+  const user = (req as Request & { user?: CartUser }).user;
 
   const result = await CartItemService.create(req.body, user);
   sendResponse(res, {
@@ -20,7 +24,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserCartItems = catchAsync(async (req: Request, res: Response) => {
-  const user = (req as Request & { user?: JwtPayload }).user;
+  const user = (req as Request & { user?: CartUser }).user;
   const result = await CartItemService.getUserCartItems(user);
 
   sendResponse(res, {
@@ -45,7 +49,8 @@ const getAllOrFilter = catchAsync(async (req: Request, res: Response) => {
 
 const getById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CartItemService.getById(id);
+  const user = (req as Request & { user?: CartUser }).user;
+  const result = await CartItemService.getById(id, user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -56,7 +61,8 @@ const getById = catchAsync(async (req: Request, res: Response) => {
 
 const updateById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CartItemService.updateById(id, req.body);
+  const user = (req as Request & { user?: CartUser }).user;
+  const result = await CartItemService.updateById(id, req.body, user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -67,7 +73,8 @@ const updateById = catchAsync(async (req: Request, res: Response) => {
 
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CartItemService.deleteById(id);
+  const user = (req as Request & { user?: CartUser }).user;
+  const result = await CartItemService.deleteById(id, user);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

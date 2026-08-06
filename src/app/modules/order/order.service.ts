@@ -100,11 +100,11 @@ const createOrder = async (
 
         let discountedAmount = 0;
         if (coupon.discountType === "PERCENTAGE") {
-          discountedAmount = totalAmount * (coupon.discountValue / 100);
+          discountedAmount = totalAmount * (Math.min(coupon.discountValue, 100) / 100);
         } else if (coupon.discountType === "FIXED_AMOUNT") {
-          discountedAmount = coupon.discountValue;
+          discountedAmount = Math.min(coupon.discountValue, totalAmount);
         }
-        totalAmount -= discountedAmount;
+        totalAmount = Math.max(0, totalAmount - discountedAmount);
 
         await transaction.coupon.update({
           where: { id: coupon.id },
