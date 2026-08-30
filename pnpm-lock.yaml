@@ -8,7 +8,7 @@ overrides:
   path-to-regexp: 0.1.13
   qs: 6.15.2
   body-parser: 1.20.6
-  lodash: 4.18.0
+  lodash: 4.17.21
   defu: 6.1.7
   effect: 3.20.0
 
@@ -43,6 +43,9 @@ importers:
       express:
         specifier: ^4.22.1
         version: 4.22.1
+      express-rate-limit:
+        specifier: ^8.6.2
+        version: 8.6.2(express@4.22.1)
       formidable:
         specifier: ^3.5.4
         version: 3.5.4
@@ -55,6 +58,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
+      nodemailer:
+        specifier: ^9.0.4
+        version: 9.0.4
       stripe:
         specifier: ^18.5.0
         version: 18.5.0(@types/node@22.19.3)
@@ -86,6 +92,9 @@ importers:
       '@types/node':
         specifier: ^22.19.3
         version: 22.19.3
+      '@types/nodemailer':
+        specifier: ^8.0.1
+        version: 8.0.1
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.50.0
         version: 8.50.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
@@ -294,6 +303,9 @@ packages:
 
   '@types/node@22.19.3':
     resolution: {integrity: sha512-1N9SBnWYOJTrNZCdh/yJE+t910Y128BoyY+zBLWhL3r0TYzlTmFdXrPwHL9DyFZmlEXNQQolTZh3KHV31QDhyA==}
+
+  '@types/nodemailer@8.0.1':
+    resolution: {integrity: sha512-PxpaInm8V1JQDd4j0ds5HfvWQk8JupS1C0Picb96QJsrrRDjBH+DlK7L4ZdNSqNULhiZRQHc40nLVShaGxXAMw==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -703,6 +715,12 @@ packages:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
 
+  express-rate-limit@8.6.2:
+    resolution: {integrity: sha512-YH4ru+eOJxQABscKFfRCy9R7x9QFGdezclVMwwgFFndzS2Xnm0uo6B0ABZsLhcpeptGv2qvuJVWlQr9gQZoC3A==}
+    engines: {node: '>= 16'}
+    peerDependencies:
+      express: '>= 4.11'
+
   express@4.22.1:
     resolution: {integrity: sha512-F2X8g9P1X7uCPZMA3MVf9wcTqlyNp7IhH5qPCI0izhaOIYXaW9L535tGA3qmjRzpH+bZczqq7hVKxTR4NWnu+g==}
     engines: {node: '>= 0.10.0'}
@@ -870,6 +888,10 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
+  ip-address@10.4.0:
+    resolution: {integrity: sha512-oSK96Grm3aP6OrS263xVxbNDGVL7rzBtYdpGqlDG8iQdoenDoTs/nkki+DflYbAEE8Xl6o5YxhxlrKvI3nqKXQ==}
+    engines: {node: '>= 12'}
+
   ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -959,9 +981,8 @@ packages:
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
 
-  lodash@4.18.0:
-    resolution: {integrity: sha512-l1mfj2atMqndAHI3ls7XqPxEjV2J9ZkcNyHpoZA3r2T1LLwDB69jgkMWh71YKwhBbK0G2f4WSn05ahmQXVxupA==}
-    deprecated: Bad release. Please use lodash@4.17.21 instead.
+  lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
   make-error@1.3.6:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
@@ -1024,6 +1045,10 @@ packages:
 
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
+
+  nodemailer@9.0.4:
+    resolution: {integrity: sha512-LmJNRVRtfSCULxcZpy0Cpg4WWenlUZ9+zbmTO+S7v9wD6XreYLjXRFtDjtV/4F0HT5p1GyZfA0Ux/myxHb18CQ==}
+    engines: {node: '>=6.0.0'}
 
   nodemon@3.1.11:
     resolution: {integrity: sha512-is96t8F/1//UHAjNPHpbsNY46ELPpftGUoSVNXwUfMk/qdjSylYrWSu1XavVTBOn526kFiOR733ATgNBCQyH0g==}
@@ -1587,6 +1612,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/nodemailer@8.0.1':
+    dependencies:
+      '@types/node': 22.19.3
+
   '@types/qs@6.14.0': {}
 
   '@types/range-parser@1.2.7': {}
@@ -1838,7 +1867,7 @@ snapshots:
 
   cloudinary@2.8.0:
     dependencies:
-      lodash: 4.18.0
+      lodash: 4.17.21
       q: 1.5.1
 
   color-convert@2.0.1:
@@ -2052,6 +2081,14 @@ snapshots:
 
   etag@1.8.1: {}
 
+  express-rate-limit@8.6.2(express@4.22.1):
+    dependencies:
+      debug: 4.4.3(supports-color@5.5.0)
+      express: 4.22.1
+      ip-address: 10.4.0
+    transitivePeerDependencies:
+      - supports-color
+
   express@4.22.1:
     dependencies:
       accepts: 1.3.8
@@ -2237,6 +2274,8 @@ snapshots:
 
   inherits@2.0.4: {}
 
+  ip-address@10.4.0: {}
+
   ipaddr.js@1.9.1: {}
 
   is-binary-path@2.1.0:
@@ -2320,7 +2359,7 @@ snapshots:
 
   lodash.once@4.1.1: {}
 
-  lodash@4.18.0: {}
+  lodash@4.17.21: {}
 
   make-error@1.3.6: {}
 
@@ -2361,6 +2400,8 @@ snapshots:
   negotiator@0.6.4: {}
 
   node-fetch-native@1.6.7: {}
+
+  nodemailer@9.0.4: {}
 
   nodemon@3.1.11:
     dependencies:

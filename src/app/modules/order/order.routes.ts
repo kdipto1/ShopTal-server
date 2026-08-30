@@ -21,6 +21,12 @@ router.get(
   OrderController.getOrders,
 );
 
+router.get(
+  "/my/:orderId",
+  auth(ENUM_USER_ROLE.USER, ENUM_USER_ROLE.ADMIN),
+  OrderController.getMyOrderById,
+);
+
 router.patch(
   "/:orderId",
   auth(ENUM_USER_ROLE.ADMIN),

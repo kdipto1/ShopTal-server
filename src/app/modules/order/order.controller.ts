@@ -7,6 +7,7 @@ import { IOrder } from "./order.interfaces";
 import { Order } from "@prisma/client";
 import { OrderFilterAbleFields } from "./order.constants";
 import pick from "../../../shared/pick";
+import ApiError from "../../../errors/ApiError";
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,10 +72,29 @@ const getOrderById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyOrderById = catchAsync(async (req: Request, res: Response) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = (req as any).user;
+  const { orderId } = req.params;
+  const result = await OrderService.getMyOrderById(orderId, user?.userId);
+
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Order not found");
+  }
+
+  sendResponse<IOrder>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Order retrieved successfully",
+    data: result,
+  });
+});
+
 export const OrderController = {
   createOrder,
   getOrders,
   updateOrder,
   getAllOrFilter,
   getOrderById,
+  getMyOrderById,
 };

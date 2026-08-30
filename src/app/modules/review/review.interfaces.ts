@@ -7,9 +7,9 @@ export type IReviewPayload = {
   comment?: string;
 };
 
-export type IReviewUpdatePayload = {
+export interface IReviewUpdatePayload {
   rating?: number;
   comment?: string;
-};
+}
 
 export type IReview = Review;

@@ -18,13 +18,6 @@ const createOrder = async (
     async (transaction: Prisma.TransactionClient) => {
       const user = await transaction.user.findUnique({
         where: { id: userId },
-        include: {
-          cart: {
-            include: {
-              cartItems: true,
-            },
-          },
-        },
       });
 
       if (!user) {
@@ -53,7 +46,7 @@ const createOrder = async (
           );
         }
 
-        const price = product.price * item.quantity;
+        const price = Number(product.price) * item.quantity;
         totalAmount += price;
 
         orderItemsData.push({
@@ -100,9 +93,9 @@ const createOrder = async (
 
         let discountedAmount = 0;
         if (coupon.discountType === "PERCENTAGE") {
-          discountedAmount = totalAmount * (Math.min(coupon.discountValue, 100) / 100);
+          discountedAmount = totalAmount * (Math.min(Number(coupon.discountValue), 100) / 100);
         } else if (coupon.discountType === "FIXED_AMOUNT") {
-          discountedAmount = Math.min(coupon.discountValue, totalAmount);
+          discountedAmount = Math.min(Number(coupon.discountValue), totalAmount);
         }
         totalAmount = Math.max(0, totalAmount - discountedAmount);
 
@@ -129,12 +122,6 @@ const createOrder = async (
         },
         include: {
           orderItems: true,
-        },
-      });
-
-      await transaction.cartItem.deleteMany({
-        where: {
-          cartId: user.cart?.id,
         },
       });
 
@@ -197,6 +184,17 @@ const updateOrder = async (
             data: {
               quantity: {
                 increment: item.quantity,
+              },
+            },
+          });
+        }
+
+        if (order.couponId) {
+          await transaction.coupon.update({
+            where: { id: order.couponId },
+            data: {
+              used: {
+                decrement: 1,
               },
             },
           });
@@ -295,10 +293,36 @@ const getOrderById = async (orderId: string): Promise<IOrder | null> => {
   return order;
 };
 
+const getMyOrderById = async (
+  orderId: string,
+  userId: string,
+): Promise<IOrder | null> => {
+  const order = await prisma.order.findFirst({
+    where: {
+      id: orderId,
+      userId,
+    },
+    include: {
+      orderItems: {
+        include: {
+          product: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return order;
+};
+
 export const OrderService = {
   createOrder,
   getOrders,
   updateOrder,
   getAllOrFilter,
   getOrderById,
+  getMyOrderById,
 };

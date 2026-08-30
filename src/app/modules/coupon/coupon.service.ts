@@ -34,7 +34,7 @@ const applyCoupon = async (
     include: { cartItems: { include: { product: true } } },
   });
   const totalAmount = (cart?.cartItems || []).reduce(
-    (total, item) => total + item.product.price * item.quantity,
+    (total, item) => total + Number(item.product.price) * item.quantity,
     0,
   );
   if (totalAmount <= 0) throw new ApiError(httpStatus.BAD_REQUEST, "Your cart is empty");
@@ -63,9 +63,9 @@ const applyCoupon = async (
   let discountedAmount = 0;
 
   if (coupon.discountType === "PERCENTAGE") {
-    discountedAmount = totalAmount * (Math.min(coupon.discountValue, 100) / 100);
+    discountedAmount = totalAmount * (Math.min(Number(coupon.discountValue), 100) / 100);
   } else if (coupon.discountType === "FIXED_AMOUNT") {
-    discountedAmount = Math.min(coupon.discountValue, totalAmount);
+    discountedAmount = Math.min(Number(coupon.discountValue), totalAmount);
   }
 
   return Math.max(0, totalAmount - discountedAmount);

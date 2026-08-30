@@ -262,7 +262,7 @@ const getDashboardAnalytics = async (
 
   const recentOrdersMapped: RecentOrder[] = recentOrders.map((o) => ({
     id: o.id,
-    totalAmount: o.totalAmount,
+    totalAmount: Number(o.totalAmount),
     status: o.status,
     createdAt: o.createdAt,
     customer: {

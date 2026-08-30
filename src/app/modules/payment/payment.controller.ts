@@ -16,6 +16,14 @@ const createPaymentIntent = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const webhook = catchAsync(async (req: Request, res: Response) => {
+  const signature = req.headers["stripe-signature"] as string;
+  const result = await PaymentService.handleWebhook(req.body, signature);
+
+  res.status(httpStatus.OK).json(result);
+});
+
 export const PaymentController = {
   createPaymentIntent,
+  webhook,
 };

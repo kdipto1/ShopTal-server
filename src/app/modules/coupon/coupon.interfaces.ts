@@ -11,7 +11,7 @@ export type ICouponPayload = {
 
 export type ICoupon = Coupon;
 
-export type ICouponFilterRequest = {
+export interface ICouponFilterRequest {
   searchTerm?: string;
   code?: string;
-};
+}

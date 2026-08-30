@@ -1,12 +1,15 @@
-import express, { Application, NextFunction, Request, Response } from "express";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import helmet from "helmet";
 import compression from "compression";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import express, { Application, NextFunction, Request, Response } from "express";
+import helmet from "helmet";
 import httpStatus from "http-status";
-import config from "./config";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import { globalRateLimiter } from "./app/middlewares/rateLimit";
+import config from "./config";
 const app: Application = express();
+
+app.set("trust proxy", 1);
 
 app.use(helmet());
 app.use(compression());
@@ -22,8 +25,12 @@ app.use(
   }),
 );
 app.use(cookieParser());
+app.use(globalRateLimiter);
 
 //parser
+// Stripe webhook needs the raw body for signature verification, so it must be
+// mounted before the JSON parser.
+app.use("/api/v1/payment/webhook", express.raw({ type: "application/json" }));
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(express.json({ limit: "100kb" }));
 
@@ -34,6 +41,7 @@ app.get("/", async (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.NOT_FOUND).json({
     success: false,

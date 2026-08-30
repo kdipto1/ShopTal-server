@@ -18,10 +18,17 @@ export default {
   },
   stripe: {
     secret_key: process.env.STRIPE_SECRET_KEY,
+    webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
   },
   cloudier: {
     name: process.env.CLOUDINARY_cloud_name,
     key: process.env.CLOUDINARY_api_key,
     secret: process.env.CLOUDINARY_api_secret,
+  },
+  smtp: {
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 587),
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
   },
 };

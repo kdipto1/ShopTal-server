@@ -1,3 +1,5 @@
+import { Decimal } from "@prisma/client/runtime/library";
+
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type IProductFilterRequest = {
   searchTerm?: string;
@@ -15,7 +17,7 @@ export type IProductFilterRequest = {
 export type IProductWithCategoryAndReviews = {
   id: string;
   name: string;
-  price: number;
+  price: Decimal;
   quantity: number;
   brandId: string;
   averageRating: number;
