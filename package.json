@@ -17,6 +17,7 @@
   "author": "Dipto Karmaker",
   "license": "ISC",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.8.0",
@@ -32,6 +33,7 @@
     "http-status": "1.7.4",
     "jsonwebtoken": "^9.0.3",
     "nodemailer": "^9.0.4",
+    "pg": "^8.23.0",
     "stripe": "^18.5.0",
     "zod": "^3.25.76"
   },
@@ -45,6 +47,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.19.3",
     "@types/nodemailer": "^8.0.1",
+    "@types/pg": "^8.23.1",
     "@typescript-eslint/eslint-plugin": "^8.50.0",
     "@typescript-eslint/parser": "^8.50.0",
     "concurrently": "^9.2.1",
