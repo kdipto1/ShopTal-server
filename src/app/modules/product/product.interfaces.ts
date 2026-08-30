@@ -1,4 +1,6 @@
-import { Decimal } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client";
+
+type Decimal = Prisma.Decimal;
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type IProductFilterRequest = {
